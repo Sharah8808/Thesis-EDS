@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.thesis.trialnavdrawer.ui.fragments.HomeFragment"
+        android:label="@string/menu_beranda"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_diagnostic"
+            app:destination="@id/nav_diagnostic" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_history"
+            app:destination="@id/nav_history" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_disease_list"
+            app:destination="@id/nav_disease_list" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_setting"
+            app:destination="@id/nav_setting" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_diagnostic"
+        android:name="com.thesis.trialnavdrawer.ui.fragments.DiagnosticFragment"
+        android:label="@string/menu_diagnosa"
+        tools:layout="@layout/fragment_diagnostic" />
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.thesis.trialnavdrawer.ui.fragments.HistoryFragment"
+        android:label="@string/menu_riwayat"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_nav_history_to_nav_diag_detail"
+            app:destination="@id/nav_diag_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_disease_list"
+        android:name="com.thesis.trialnavdrawer.ui.fragments.DiseaseListFragment"
+        android:label="@string/menu_daftar"
+        tools:layout="@layout/fragment_disease_list" />
+
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.thesis.trialnavdrawer.ui.fragments.SettingFragment"
+        android:label="@string/menu_pengaturan"
+        tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/nav_diag_detail"
+        android:name="com.thesis.trialnavdrawer.ui.fragments.DiagnosticDetailFragment"
+        android:label="fragment_diagnostic_detail"
+        tools:layout="@layout/fragment_diagnostic_detail" />
+</navigation>

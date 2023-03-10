@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.fragments.DiseaseListFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_widget"
+        android:layout_width="372dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/shape_profile_widget">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/chawieputh"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_marginStart="@dimen/fab_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/desc_fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_marginStart="30dp"
+            app:layout_constraintStart_toEndOf="@id/img_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Nama lengkap"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/text_fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@id/desc_fullname"
+            app:layout_constraintTop_toBottomOf="@id/desc_fullname"
+            android:text="Charlie Daph"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/desc_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            app:layout_constraintStart_toStartOf="@id/text_fullname"
+            app:layout_constraintTop_toBottomOf="@id/text_fullname"
+            android:text="Email"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/text_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@id/desc_email"
+            app:layout_constraintTop_toBottomOf="@id/desc_email"
+            android:text="charlieputignator@gmail.com"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/desc_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            app:layout_constraintStart_toStartOf="@id/text_email"
+            app:layout_constraintTop_toBottomOf="@id/text_email"
+            android:text="Nomor handphone"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/text_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@id/desc_phone_number"
+            app:layout_constraintTop_toBottomOf="@id/desc_phone_number"
+            android:text="08273918374"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/button_edit_profile"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/fab_margin"
+            app:layout_constraintTop_toBottomOf="@id/text_phone_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:backgroundTint="@color/white"
+            android:text="Edit Profil"
+            android:textColor="@color/black"
+            android:textSize="12dp"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/desc_change_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toBottomOf="@id/profile_widget"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Ganti Bahasa"
+        />
+
+    <TextView
+        android:id="@+id/desc_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/desc_change_language"
+        app:layout_constraintStart_toStartOf="@id/desc_change_language"
+        android:text="Info Update Sistem"
+        />
+
+    <TextView
+        android:id="@+id/desc_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/desc_update"
+        app:layout_constraintStart_toStartOf="@id/desc_update"
+        android:text="Tentang"
+        />
+
+    <TextView
+        android:id="@+id/text_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/desc_about"
+        app:layout_constraintStart_toStartOf="@id/desc_about"
+        android:text="Logout"
+        android:textStyle="bold"
+        android:textColor="#FF0000"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

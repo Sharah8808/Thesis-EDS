@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="3dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_history"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/img_history_png"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:src="@drawable/ear"
+        />
+
+    <TextView
+        android:id="@+id/text_history_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/img_history_png"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Input Nama Riwayat"
+        android:textStyle="bold"
+        android:textSize="10dp"
+        />
+
+    <TextView
+        android:id="@+id/text_history_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintStart_toEndOf="@id/img_history_png"
+        app:layout_constraintTop_toBottomOf="@id/text_history_title"
+
+        android:text="Hasil : "
+        android:textSize="10dp"
+        />
+    
+    <TextView
+        android:id="@+id/text_history_diagResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintStart_toEndOf="@id/text_history_result"
+        app:layout_constraintTop_toBottomOf="@id/text_history_title"
+        android:text="Awooga bunga woof woof"
+        android:textSize="10dp"
+        />
+
+    <TextView
+        android:id="@+id/text_history_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="8 Aug 2021"
+        android:textSize="10dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

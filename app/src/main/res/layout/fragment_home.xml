@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/frame_home_fragment"
+    tools:context=".ui.fragments.HomeFragment"
+    android:background="@color/gray_base"
+    android:orientation="vertical"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/section_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_avatar"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/chawieputh"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/text_date"
+                    />
+
+                <TextView
+                    android:id="@+id/text_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/img_avatar"
+                    app:layout_constraintStart_toStartOf="@id/img_avatar"
+                    android:text="Show date!"
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/section_features"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                app:layout_constraintTop_toBottomOf="@id/section_profile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/shape_bg_drawer_up"
+                >
+
+                <Button
+                    android:id="@+id/button_diagnostic"
+                    android:layout_width="372dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:clickable="true"
+                    android:text="Mulai Diagnosa"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/text_history_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/button_diagnostic"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    android:text="Riwayat Diagnosa"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_history_see_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/button_diagnostic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="Lihat semua"
+                    android:clickable="true"
+                    android:focusable="true"
+                    />
+
+                <include
+                    android:id="@+id/home_scroll_history"
+                    layout="@layout/home_history"
+                    android:layout_width="372dp"
+                    android:layout_height="140dp"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/text_history_home"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/text_disease_list_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/home_scroll_history"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    android:text="Penyakit Telinga"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_disease_list_see_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/home_scroll_history"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="Lihat semua"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <include
+                    android:id="@+id/home_scroll_disease_list"
+                    layout="@layout/home_disease_list"
+                    android:layout_width="372dp"
+                    android:layout_height="140dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="50dp"
+                    app:layout_constraintTop_toBottomOf="@id/text_disease_list_home"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</FrameLayout>

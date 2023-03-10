@@ -1,0 +1,111 @@
+<resources>
+    <string name="app_name">trialNavDrawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_beranda">Beranda</string>
+    <string name="menu_diagnosa">Diagnosa Penyakit</string>
+    <string name="menu_riwayat">Riwayat</string>
+    <string name="menu_daftar">Daftar Penyakit Telinga</string>
+    <string name="menu_pengaturan">Pengaturan</string>
+    <string name="menu_detail">Detail Riwayat Penyakit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Ketik email</string>
+    <string name="prompt_password">Ketik password</string>
+    <string name="prompt_fullname">Ketik nama lengkap</string>
+    <string name="prompt_phone_number">Ketik nomor handphone</string>
+    <string name="prompt_confirm_password">Konfirmasi password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="login_welcome_back">Selamat Datang Kembali!</string>
+    <string name="singup_make_account">Buat Akun</string>
+    <string name="forgot_password"><u>Lupa Password</u></string>
+    <string name="sign_up_bottom"><u>Sign Up</u></string>
+
+    <string-array name="history_name_temp">
+        <item>Kazehaya Sakura</item>
+        <item>Hanna Zaitseva</item>
+        <item>Aoneko Hazuki</item>
+        <item>Kazuhita Izumi</item>
+        <item>Kim Namjoon</item>
+        <item>Muraharu Yuuya</item>
+        <item>Natsuya Reiku</item>
+        <item>Sean Zaitseva</item>
+        <item>Irina </item>
+        <item>Ishikawa Hoseki</item>
+        <item>Tom Scamander</item>
+        <item>Xarles Flint</item>
+        <item>Raven Scamander</item>
+        <item>Gale Luna Colotte</item>
+        <item>Evan</item>
+    </string-array>
+
+    <string-array name="history_result_temp">
+        <item>Aerotitis Barotrauma</item>
+        <item>Ceruman</item>
+        <item>Corpus Alienum</item>
+        <item>M Timpani Normal</item>
+        <item>Myringitis Bulosa</item>
+        <item>Normal</item>
+        <item>OE Difusa</item>
+        <item>OE Furunkulosa</item>
+        <item>OMA Hiperemis</item>
+        <item>OMA Oklusi Tuba</item>
+        <item>OMA Perforasi</item>
+        <item>OMA Resolusi</item>
+        <item>OMA Supurasi</item>
+        <item>OMed Efusi</item>
+        <item>OMedK Resolusi</item>
+    </string-array>
+
+    <string-array name="history_date_temp">
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+        <item>08/08/22</item>
+    </string-array>
+
+    <integer-array name="history_photo_temp">
+        <item>@drawable/dislist_sakura</item>
+        <item>@drawable/dislist_hanna</item>
+        <item>@drawable/dislist_hazuki</item>
+        <item>@drawable/dislist_izumi</item>
+        <item>@drawable/dislist_namjoon</item>
+        <item>@drawable/dislist_yuuya</item>
+        <item>@drawable/dislist_reiku</item>
+        <item>@drawable/dislist_sean</item>
+        <item>@drawable/dislist_irina</item>
+        <item>@drawable/dislist_hoseki</item>
+        <item>@drawable/dislist_tom</item>
+        <item>@drawable/dislist_xarles</item>
+        <item>@drawable/dislist_raven</item>
+        <item>@drawable/dislist_gale</item>
+        <item>@drawable/dislist_evan</item>
+    </integer-array>
+
+</resources>
+
+
+
+
