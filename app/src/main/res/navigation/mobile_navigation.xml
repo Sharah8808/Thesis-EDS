@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.thesis.trialnavdrawer.ui.fragments.HomeFragment"
+        android:name="com.thesis.eds.ui.fragments.HomeFragment"
         android:label="@string/menu_beranda"
         tools:layout="@layout/fragment_home" >
         <action
@@ -27,13 +27,13 @@
 
     <fragment
         android:id="@+id/nav_diagnostic"
-        android:name="com.thesis.trialnavdrawer.ui.fragments.DiagnosticFragment"
+        android:name="com.thesis.eds.ui.fragments.DiagnosticFragment"
         android:label="@string/menu_diagnosa"
         tools:layout="@layout/fragment_diagnostic" />
 
     <fragment
         android:id="@+id/nav_history"
-        android:name="com.thesis.trialnavdrawer.ui.fragments.HistoryFragment"
+        android:name="com.thesis.eds.ui.fragments.HistoryFragment"
         android:label="@string/menu_riwayat"
         tools:layout="@layout/fragment_history" >
         <action
@@ -43,19 +43,19 @@
 
     <fragment
         android:id="@+id/nav_disease_list"
-        android:name="com.thesis.trialnavdrawer.ui.fragments.DiseaseListFragment"
+        android:name="com.thesis.eds.ui.fragments.DiseaseListFragment"
         android:label="@string/menu_daftar"
         tools:layout="@layout/fragment_disease_list" />
 
     <fragment
         android:id="@+id/nav_setting"
-        android:name="com.thesis.trialnavdrawer.ui.fragments.SettingFragment"
+        android:name="com.thesis.eds.ui.fragments.SettingFragment"
         android:label="@string/menu_pengaturan"
         tools:layout="@layout/fragment_setting" />
 
     <fragment
         android:id="@+id/nav_diag_detail"
-        android:name="com.thesis.trialnavdrawer.ui.fragments.DiagnosticDetailFragment"
+        android:name="com.thesis.eds.ui.fragments.DiagnosticDetailFragment"
         android:label="fragment_diagnostic_detail"
         tools:layout="@layout/fragment_diagnostic_detail" />
 </navigation>
