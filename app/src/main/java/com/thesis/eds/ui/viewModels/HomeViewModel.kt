@@ -1,13 +1,10 @@
 package com.thesis.eds.ui.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.thesis.eds.data.History
+import com.thesis.eds.utils.Dummy
 
 class HomeViewModel : ViewModel() {
 
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is home Fragment"
-//    }
-//
-//
-//    val text: LiveData<String> = _text
+    fun getHistoryList():List<History> = Dummy.getDummyHistory()
 }

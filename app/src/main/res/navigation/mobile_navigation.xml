@@ -13,7 +13,8 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_nav_diagnostic"
-            app:destination="@id/nav_diagnostic" />
+            app:destination="@id/nav_diagnostic"
+            app:popUpTo="@id/nav_home"/>
         <action
             android:id="@+id/action_nav_home_to_nav_history"
             app:destination="@id/nav_history" />
@@ -57,5 +58,9 @@
         android:id="@+id/nav_diag_detail"
         android:name="com.thesis.eds.ui.fragments.DiagnosticDetailFragment"
         android:label="fragment_diagnostic_detail"
-        tools:layout="@layout/fragment_diagnostic_detail" />
+        tools:layout="@layout/fragment_diagnostic_detail" >
+        <argument
+            android:name="historyId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

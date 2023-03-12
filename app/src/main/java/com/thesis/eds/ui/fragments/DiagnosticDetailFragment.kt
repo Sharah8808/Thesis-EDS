@@ -10,6 +10,7 @@ import android.widget.Toast
 import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.thesis.eds.R
@@ -24,9 +25,10 @@ class DiagnosticDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: DiagnosticDetailViewModel
 
-    companion object{
-        const val EXTRA_DATA = "extra_data"
-    }
+//    companion object{
+//        const val EXTRA_DATA = "extra_data"
+//    }
+    private val args : DiagnosticDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,11 +58,15 @@ class DiagnosticDetailFragment : Fragment() {
     }
 
     private fun fragmentTransactionProcess(){
-        if(arguments != null){
-            val extra = arguments?.getInt(EXTRA_DATA)
-            extra?.let { viewModel.setSelectedEntityHistory(it) }
-            showDetailHistory(viewModel.selectHistory())
-        }
+//        if(arguments != null){
+//            val extra = arguments?.getInt(EXTRA_DATA)
+//            extra?.let { viewModel.setSelectedEntityHistory(it) }
+//            showDetailHistory(viewModel.selectHistory())
+//        }
+        //argumen berisi extra data (id), masuk ke val extra, dri extra di ambil id-ny pake it, panggil viewmodel dgn id it, dll dll
+
+        viewModel.setSelectedEntityHistory(args.historyId)
+        showDetailHistory(viewModel.selectHistory())
     }
 
     private fun showDetailHistory(history : History){
@@ -79,7 +85,7 @@ class DiagnosticDetailFragment : Fragment() {
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_detail))
 
 
-    //        (activity as MenuItemHighlighter).setMenuHighlight(2)
+    //   (activity as MenuItemHighlighter).setMenuHighlight(2)
     }
 
     override fun onDestroyView() {

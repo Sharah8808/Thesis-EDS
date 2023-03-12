@@ -55,5 +55,6 @@ class SettingFragment : Fragment() {
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_pengaturan))
         (activity as MenuItemHighlighter).setMenuHighlight(4)
+
     }
 }

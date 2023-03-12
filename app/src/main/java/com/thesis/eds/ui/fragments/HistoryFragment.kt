@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.eds.R
@@ -79,28 +80,27 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
 
     override fun onItemClicked(historyEntity: History) {
         Toast.makeText(requireActivity(), "test pindah ke detailleee", Toast.LENGTH_SHORT).show()
-//        navControl.navigate(R)
-        val mCategoryFragment = DiagnosticDetailFragment()
-        val mBundle = Bundle()
-        mBundle.putInt(DiagnosticDetailFragment.EXTRA_DATA, historyEntity.id_history!!)
-        mCategoryFragment.arguments = mBundle
-        val mFragmentManager = parentFragmentManager
-        mFragmentManager.beginTransaction().apply {
-            replace(
-                binding.frameHistoryFragment.id,
-                mCategoryFragment,
-                DiagnosticDetailFragment::class.java.simpleName
-            )
-            addToBackStack(null)
-            setReorderingAllowed(true)
-            commit()
 
-        }
+//        val mCategoryFragment = DiagnosticDetailFragment()
+//        val mBundle = Bundle()
+//        mBundle.putInt(DiagnosticDetailFragment.EXTRA_DATA, historyEntity.id_history!!)
+//        mCategoryFragment.arguments = mBundle
+//        val mFragmentManager = parentFragmentManager
+//        mFragmentManager.beginTransaction().apply {
+//            replace(
+//                binding.frameHistoryFragment.id,
+//                mCategoryFragment,
+//                DiagnosticDetailFragment::class.java.simpleName
+//            )
+//            addToBackStack(null)
+//            setReorderingAllowed(true)
+//            commit()
+//        }
 
+        val hisId = historyEntity.id_history
+        val action = HistoryFragmentDirections.actionNavHistoryToNavDiagDetail(hisId!!)
+        findNavController().navigate(action )
 
-//        startActivity(Intent(context, DetailActivity::class.java)
-//            .putExtra(DetailActivity.EXTRA_DATA, entity.id)
-//            .putExtra(DetailActivity.EXTRA_TYPE, TYPE_MOVIE))
     }
 
 
