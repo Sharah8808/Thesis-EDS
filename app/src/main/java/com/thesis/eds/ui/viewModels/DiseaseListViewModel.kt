@@ -1,10 +1,9 @@
 package com.thesis.eds.ui.viewModels
 
 import androidx.lifecycle.ViewModel
+import com.thesis.eds.data.DiseaseList
+import com.thesis.eds.utils.Dummy
 
 class DiseaseListViewModel : ViewModel() {
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is disease list Fragment"
-//    }
-//    val text: LiveData<String> = _text
+    fun getDiseaseList(): List<DiseaseList> = Dummy.getDummyDiseaseList()
 }

@@ -1,6 +1,5 @@
 package com.thesis.eds.ui.fragments
 
-//import com.thesis.trialnavdrawer.MainActivity.ActionBarTitleSetter
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,21 +10,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavHostController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.thesis.eds.MainActivity
 import com.thesis.eds.R
-import com.thesis.eds.adapters.HistoryAdapter
+import com.thesis.eds.adapters.DiseaseListAdapter
 import com.thesis.eds.adapters.HomeHistoryAdapter
+import com.thesis.eds.data.DiseaseList
 import com.thesis.eds.data.History
 import com.thesis.eds.databinding.FragmentHomeBinding
-import com.thesis.eds.ui.viewModels.HistoryViewModel
 import com.thesis.eds.ui.viewModels.HomeViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -33,7 +30,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
     private lateinit var viewModel : HomeViewModel
     private lateinit var rvHistory : RecyclerView
-    private val list = ArrayList<History>()
+    private val listHistory = ArrayList<History>()
+    private val listDisease = ArrayList<DiseaseList>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,15 +59,23 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
             viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HomeViewModel::class.java]
             val historyEntity = viewModel.getHistoryList()
+            val diseaseListEntity = viewModel.getDiseaseList()
 
-            val rvhistoryAdapter = HomeHistoryAdapter(list)
+            val rvhistoryAdapter = HomeHistoryAdapter(listHistory)
+            val rvDiseaseListAdapter = DiseaseListAdapter(listDisease)
             rvhistoryAdapter.setRVDataList(historyEntity)
+            rvDiseaseListAdapter.setRVDataList(diseaseListEntity)
 
             with(binding.homeScrollHistory){
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-//                val listHeroAdapter = ListHeroAdapter(list)
                 adapter = rvhistoryAdapter
+            }
+
+            with(binding.homeScrollDiseaseList){
+                layoutManager = LinearLayoutManager(context)
+                setHasFixedSize(true)
+                adapter = rvDiseaseListAdapter
             }
 
         }

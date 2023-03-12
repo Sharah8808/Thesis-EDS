@@ -50,7 +50,7 @@
         <item>Evan</item>
     </string-array>
 
-    <string-array name="history_result_temp">
+    <string-array name="name_disease_list">
         <item>Aerotitis Barotrauma</item>
         <item>Ceruman</item>
         <item>Corpus Alienum</item>

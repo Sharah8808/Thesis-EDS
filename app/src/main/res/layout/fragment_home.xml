@@ -104,7 +104,6 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/home_scroll_history"
-                    layout="@layout/home_history"
                     android:layout_width="372dp"
                     android:layout_height="140dp"
                     android:layout_marginTop="5dp"
@@ -139,9 +138,9 @@
                     android:clickable="true"
                     android:focusable="true" />
 
-                <include
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/home_scroll_disease_list"
-                    layout="@layout/home_disease_list"
+                    tools:listitem="@layout/list_disease_list"
                     android:layout_width="372dp"
                     android:layout_height="140dp"
                     android:layout_marginTop="5dp"
@@ -150,6 +149,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/shape_border"
                     />
 
 

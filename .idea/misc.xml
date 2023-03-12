@@ -9,10 +9,13 @@
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/app_bar_main.xml" value="0.2826086956521739" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/content_main.xml" value="0.2826086956521739" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/fragment_diagnostic.xml" value="0.25" />
-        <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/fragment_history.xml" value="0.2826086956521739" />
+        <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/fragment_disease_list.xml" value="0.1" />
+        <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/fragment_history.xml" value="0.1" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/fragment_setting.xml" value="0.2826086956521739" />
+        <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/home_disease_list.xml" value="0.1" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/home_history.xml" value="0.2826086956521739" />
+        <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/list_disease_list.xml" value="0.1" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/layout/list_history.xml" value="0.2826086956521739" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis/app/src/main/res/menu/activity_main_drawer.xml" value="0.29322916666666665" />
       </map>

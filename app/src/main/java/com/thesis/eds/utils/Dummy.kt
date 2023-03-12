@@ -1,6 +1,7 @@
 package com.thesis.eds.utils
 
 import com.thesis.eds.R
+import com.thesis.eds.data.DiseaseList
 import com.thesis.eds.data.History
 
 object Dummy {
@@ -147,4 +148,55 @@ object Dummy {
         return listHistory
     }
 
+    fun getDummyDiseaseList(): List<DiseaseList> {
+        val listDisease = ArrayList<DiseaseList>()
+
+        listDisease.add(
+            DiseaseList("Aerotitis Barotrauma" )
+        )
+        listDisease.add(
+            DiseaseList("Ceruman" )
+        )
+        listDisease.add(
+            DiseaseList("Corpus Alienum" )
+        )
+        listDisease.add(
+            DiseaseList("M Timpani Normal" )
+        )
+        listDisease.add(
+            DiseaseList("Myringitis Bulosa" )
+        )
+        listDisease.add(
+            DiseaseList("Normal" )
+        )
+        listDisease.add(
+            DiseaseList("OE Difusa" )
+        )
+        listDisease.add(
+            DiseaseList("OE Furunkulosa" )
+        )
+        listDisease.add(
+            DiseaseList("OMA Hiperemis" )
+        )
+        listDisease.add(
+            DiseaseList("OMA Oklusi Tuba" )
+        )
+        listDisease.add(
+            DiseaseList("OMA Perforasi" )
+        )
+        listDisease.add(
+            DiseaseList("OMA Resolusi" )
+        )
+        listDisease.add(
+            DiseaseList("OMA Supurasi" )
+        )
+        listDisease.add(
+            DiseaseList("OMed Efusi" )
+        )
+        listDisease.add(
+            DiseaseList("OMedK Resolusi" )
+        )
+
+        return listDisease
+    }
 }

@@ -8,11 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.eds.R
+import com.thesis.eds.adapters.DiseaseListAdapter
+import com.thesis.eds.data.DiseaseList
 import com.thesis.eds.databinding.FragmentDiseaseListBinding
 import com.thesis.eds.ui.viewModels.DiseaseListViewModel
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
+import com.thesis.eds.ui.viewModels.HomeViewModel
 
 class DiseaseListFragment : Fragment() {
     private var _binding: FragmentDiseaseListBinding? = null
@@ -20,23 +24,34 @@ class DiseaseListFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var viewModel : DiseaseListViewModel
+
+    private val listDisease = ArrayList<DiseaseList>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val diseaseListViewModel =
-            ViewModelProvider(this).get(DiseaseListViewModel::class.java)
-
         _binding = FragmentDiseaseListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-//        val textView: TextView = binding.textDiseaseList
-//        diseaseListViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[DiseaseListViewModel::class.java]
+        val diseaseListEntity = viewModel.getDiseaseList()
+
+        val rvDiseaseListAdapter = DiseaseListAdapter(listDisease)
+        rvDiseaseListAdapter.setRVDataList(diseaseListEntity)
+
+        with(binding.recyclerviewDiseaseList){
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = rvDiseaseListAdapter
+        }
     }
 
     override fun onDestroyView() {

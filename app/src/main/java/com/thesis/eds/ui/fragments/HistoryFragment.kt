@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.eds.R
 import com.thesis.eds.adapters.HistoryAdapter
@@ -55,7 +56,7 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
 //        rvHistory = binding.recyclerviewHistory
 //        rvHistory.setHasFixedSize(true)
         with(binding.recyclerviewHistory) {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = rvHistoryAdapter
         }
