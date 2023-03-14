@@ -157,6 +157,8 @@
         android:text="Logout"
         android:textStyle="bold"
         android:textColor="#FF0000"
+        android:clickable="true"
+        android:focusable="true"
         />
 
 

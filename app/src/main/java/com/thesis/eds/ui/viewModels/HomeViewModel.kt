@@ -10,4 +10,6 @@ class HomeViewModel : ViewModel() {
     fun getHistoryList():List<History> = Dummy.getDummyHistory()
 
     fun getDiseaseList(): List<DiseaseList> = Dummy.getDummyDiseaseList()
+
+    
 }

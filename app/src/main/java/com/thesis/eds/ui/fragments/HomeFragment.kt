@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.thesis.eds.R
 import com.thesis.eds.adapters.DiseaseListAdapter
 import com.thesis.eds.adapters.HomeHistoryAdapter
@@ -33,6 +34,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val listHistory = ArrayList<History>()
     private val listDisease = ArrayList<DiseaseList>()
 
+    private lateinit var firebaseAuth: FirebaseAuth
+//    companion object
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,14 +46,21 @@ class HomeFragment : Fragment(), View.OnClickListener {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDate
-        dateApplicator(textView)
+
 
         return root
+
     }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
+            viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HomeViewModel::class.java]
+            firebaseAuth = FirebaseAuth.getInstance()
+
+            val textView: TextView = binding.textDate
+            val currentDayTime = dateApplicator(textView) + " "
+            greetings(currentDayTime)
+
             val btnCategory: Button = view.findViewById(binding.buttonDiagnostic.id)
             val textHistoryAll : TextView = view.findViewById(binding.textHistorySeeAll.id)
             val textDiseaseListAll : TextView = view.findViewById(binding.textDiseaseListSeeAll.id)
@@ -57,7 +68,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             textHistoryAll.setOnClickListener(this)
             textDiseaseListAll.setOnClickListener(this)
 
-            viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HomeViewModel::class.java]
             val historyEntity = viewModel.getHistoryList()
             val diseaseListEntity = viewModel.getDiseaseList()
 
@@ -77,6 +87,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 setHasFixedSize(true)
                 adapter = rvDiseaseListAdapter
             }
+
+
 
         }
 
@@ -101,7 +113,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
 
     @SuppressLint("SimpleDateFormat")
-    fun dateApplicator(textView: TextView){
+    fun dateApplicator(textView: TextView) : String{
         val dateTime : String
         val calendar : Calendar
         val simpleDateFormat : SimpleDateFormat
@@ -110,6 +122,32 @@ class HomeFragment : Fragment(), View.OnClickListener {
         simpleDateFormat = SimpleDateFormat("EEEE, dd LLLL yyyy")
         dateTime = simpleDateFormat.format(calendar.time).toString()
         textView.text = dateTime
+
+        val currentDay = when(calendar.get(Calendar.HOUR_OF_DAY)){
+            in 5 .. 11 -> {
+                "Selamat Pagi"
+            }
+            in 12 .. 15 -> {
+                "Selamat Siang"
+            }
+            in 16 .. 18 -> {
+                "Selamat Sore"
+            }
+            else -> {
+                "Selamat Malam"
+            }
+        }
+        return currentDay
+    }
+
+    private fun greetings(dayTime : String){
+        binding.textGreetingsDayTime.text = dayTime
+        val currUser = firebaseAuth.currentUser
+        currUser?.let {
+            Toast.makeText(requireActivity(), "is there any username?", Toast.LENGTH_SHORT).show()
+            binding.textGreetingsUsername.text = it.email
+        }
+
     }
 
     override fun onDestroyView() {

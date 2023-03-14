@@ -36,6 +36,7 @@ class SignUpActivity : AppCompatActivity() {
                 if(password == confirm_pass){
                     firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
                         if(it.isSuccessful){
+
                             Toast.makeText(this, "BALEK KE LOGIN ACTTTT", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this, LoginActivity::class.java )
                             startActivity(intent)

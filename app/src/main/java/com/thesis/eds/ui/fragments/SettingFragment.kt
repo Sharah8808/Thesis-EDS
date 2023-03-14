@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentSettingBinding
@@ -15,7 +17,7 @@ import com.thesis.eds.ui.viewModels.SettingViewModel
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
 
-class SettingFragment : Fragment() {
+class SettingFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentSettingBinding? = null
     private lateinit var firebaseAuth: FirebaseAuth
 
@@ -38,11 +40,25 @@ class SettingFragment : Fragment() {
         val logout = binding.textLogout.setOnClickListener {
             firebaseAuth.signOut()
         }
-//        val textView: TextView = binding.textSetting
-//        settingViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val logout : TextView = view.findViewById(binding.textLogout.id)
+
+        logout.setOnClickListener(this)
+
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            binding.textLogout.id -> {
+                firebaseAuth.signOut()
+                val action = SettingFragmentDirections.actionNavSettingToLoginActivity()
+                findNavController().navigate(action)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -57,4 +73,6 @@ class SettingFragment : Fragment() {
         (activity as MenuItemHighlighter).setMenuHighlight(4)
 
     }
+
+
 }
