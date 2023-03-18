@@ -14,6 +14,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.thesis.eds.data.History
 import com.thesis.eds.databinding.ActivityMainBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
         setContentView(mainBinding.root)
 
         setSupportActionBar(mainBinding.appBarMain.toolbar)
+        val db = Firebase.firestore
 
         val drawerLayout: DrawerLayout = mainBinding.drawerLayout
         val navView: NavigationView = mainBinding.navView

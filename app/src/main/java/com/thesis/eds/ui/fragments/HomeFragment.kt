@@ -14,6 +14,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.database.DatabaseReference
+//import com.google.firebase.database.FirebaseDatabase
+//import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.thesis.eds.R
 import com.thesis.eds.adapters.DiseaseListAdapter
 import com.thesis.eds.adapters.HomeHistoryAdapter
@@ -23,7 +27,7 @@ import com.thesis.eds.databinding.FragmentHomeBinding
 import com.thesis.eds.ui.viewModels.HomeViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -35,6 +39,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val listDisease = ArrayList<DiseaseList>()
 
     private lateinit var firebaseAuth: FirebaseAuth
+//    private lateinit var database: DatabaseReference
 //    companion object
 
     override fun onCreateView(
@@ -56,6 +61,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             super.onViewCreated(view, savedInstanceState)
             viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HomeViewModel::class.java]
             firebaseAuth = FirebaseAuth.getInstance()
+//            database = Firebase.database.reference
 
             val textView: TextView = binding.textDate
             val currentDayTime = dateApplicator(textView) + " "
@@ -142,11 +148,31 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private fun greetings(dayTime : String){
         binding.textGreetingsDayTime.text = dayTime
+//        val reference = FirebaseDatabase.getInstance().getReference("users")
+
+
         val currUser = firebaseAuth.currentUser
-        currUser?.let {
+//        val uid =
+        currUser?.let { it ->
             Toast.makeText(requireActivity(), "is there any username?", Toast.LENGTH_SHORT).show()
-            binding.textGreetingsUsername.text = it.email
+            val uid = it.uid
+
+//            binding.textGreetingsUsername.text =
+//                database.child("users").child(uid).child("fullname").get().toString()
+//
+//            database.child("users").child(uid).get().addOnSuccessListener {
+////                database.
+//
+//                Toast.makeText(requireActivity(), "got value : " + it.value, Toast.LENGTH_SHORT).show()
+////                Timber.i("Got value " + it.value)
+//
+//            }.addOnFailureListener {
+//                Toast.makeText(requireActivity(), "error dataa", Toast.LENGTH_SHORT).show()
+//
+////                Timber.e(it, "Error getting data")
+//            }
         }
+
 
     }
 
