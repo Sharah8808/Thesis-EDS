@@ -1,19 +1,22 @@
 package com.thesis.eds.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 //import com.google.firebase.database.DatabaseReference
 //import com.google.firebase.database.FirebaseDatabase
 //import com.google.firebase.database.ktx.database
@@ -39,6 +42,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private val listDisease = ArrayList<DiseaseList>()
 
     private lateinit var firebaseAuth: FirebaseAuth
+    private val db = Firebase.firestore
 //    private lateinit var database: DatabaseReference
 //    companion object
 
@@ -47,14 +51,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-
-
-        return root
-
+        return binding.root
     }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,7 +97,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         }
 
         override fun onClick(v: View) {
-            Toast.makeText(requireActivity(), "teessst", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireActivity(), "teessst", Toast.LENGTH_SHORT).show()
             when (v.id) {
                 R.id.button_diagnostic -> {
                     val action = HomeFragmentDirections.actionNavHomeToNavDiagnostic()
@@ -150,29 +148,29 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.textGreetingsDayTime.text = dayTime
 //        val reference = FirebaseDatabase.getInstance().getReference("users")
 
-
         val currUser = firebaseAuth.currentUser
-//        val uid =
-        currUser?.let { it ->
-            Toast.makeText(requireActivity(), "is there any username?", Toast.LENGTH_SHORT).show()
-            val uid = it.uid
+        val uid = currUser?.uid
 
-//            binding.textGreetingsUsername.text =
-//                database.child("users").child(uid).child("fullname").get().toString()
-//
-//            database.child("users").child(uid).get().addOnSuccessListener {
-////                database.
-//
-//                Toast.makeText(requireActivity(), "got value : " + it.value, Toast.LENGTH_SHORT).show()
-////                Timber.i("Got value " + it.value)
-//
-//            }.addOnFailureListener {
-//                Toast.makeText(requireActivity(), "error dataa", Toast.LENGTH_SHORT).show()
-//
-////                Timber.e(it, "Error getting data")
-//            }
-        }
+        // Get a reference to the Firestore collection
+        val collectionRef = FirebaseFirestore.getInstance().collection("users")
 
+        // Query the collection to retrieve the user document with a specific ID
+        val userDocRef = collectionRef.document(uid!!)
+
+        // Retrieve the user's name field from the document
+        userDocRef.get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    val userName = doc.getString("username")
+                    binding.textGreetingsUsername.text = userName
+                    Log.d(TAG, "User's name: $userName")
+                } else {
+                    Log.d(TAG, "No such document!")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "Error getting document: ", e)
+            }
 
     }
 

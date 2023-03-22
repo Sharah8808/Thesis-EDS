@@ -43,7 +43,7 @@ class DiagnosticDetailFragment : Fragment() {
         toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
         toolbar?.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
-        Toast.makeText(requireActivity(), "haaaloooooooooooooooooo", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireActivity(), "haaaloooooooooooooooooo", Toast.LENGTH_SHORT).show()
         return root
     }
 
@@ -80,7 +80,7 @@ class DiagnosticDetailFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        Toast.makeText(requireActivity(), "is kierooo heerre? from detail detail frag", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireActivity(), "is kierooo heerre? from detail detail frag", Toast.LENGTH_SHORT).show()
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_detail))
 

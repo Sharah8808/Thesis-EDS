@@ -12,9 +12,9 @@ object Dummy {
             History(
                 0,
                 "Kazehaya Sakura",
-                "Aerotitis Barotrauma",
-                "08/08/22",
-                R.drawable.dislist_sakura
+                "HABEDE SHEEE UDAH MAKIN TUA YAEY",
+                "23/03/23",
+                R.drawable.habedeshe
             )
         )
         listHistory.add(

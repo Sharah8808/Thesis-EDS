@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.etEmail.text.toString()
             val pass = binding.etPaswword.text.toString()
 
-            Toast.makeText(this, "KELIK TOMBOLNYA ANJER", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "KELIK TOMBOLNYA ANJER", Toast.LENGTH_SHORT).show()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
 

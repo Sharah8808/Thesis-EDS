@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        Toast.makeText(this, appBarConfiguration.toString() + "eeehhh", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, appBarConfiguration.toString() + "eeehhh", Toast.LENGTH_SHORT).show()
 
         navView.setNavigationItemSelectedListener {menuItem ->
             when (menuItem.itemId) {
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        Toast.makeText(this, "ORAOROAORA", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "ORAOROAORA", Toast.LENGTH_SHORT).show()
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
 
     override fun setMenuHighlight(idIndex: Int?) {
         val navView: NavigationView = mainBinding.navView
-        Toast.makeText(this, "is highlight called on main?!?!?!", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "is highlight called on main?!?!?!", Toast.LENGTH_SHORT).show()
         idIndex?.let { navView.menu.getItem(it).setChecked(true) }
     }
 

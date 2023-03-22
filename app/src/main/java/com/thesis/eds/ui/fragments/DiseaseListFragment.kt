@@ -16,7 +16,6 @@ import com.thesis.eds.databinding.FragmentDiseaseListBinding
 import com.thesis.eds.ui.viewModels.DiseaseListViewModel
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
-import com.thesis.eds.ui.viewModels.HomeViewModel
 
 class DiseaseListFragment : Fragment() {
     private var _binding: FragmentDiseaseListBinding? = null
@@ -34,9 +33,7 @@ class DiseaseListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiseaseListBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
