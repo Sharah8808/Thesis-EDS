@@ -1,8 +1,8 @@
 package com.thesis.eds.utils
 
 import com.thesis.eds.R
-import com.thesis.eds.data.DiseaseList
-import com.thesis.eds.data.History
+import com.thesis.eds.data.model.DiseaseList
+import com.thesis.eds.data.model.History
 
 object Dummy {
     fun getDummyHistory(): List<History>{

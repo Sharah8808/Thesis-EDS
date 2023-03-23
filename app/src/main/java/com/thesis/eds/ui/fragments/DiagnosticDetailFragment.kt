@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.thesis.eds.R
-import com.thesis.eds.data.History
+import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.FragmentDiagnosticDetailBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.DiagnosticDetailViewModel

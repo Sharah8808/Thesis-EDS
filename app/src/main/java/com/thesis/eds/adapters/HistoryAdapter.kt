@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.thesis.eds.data.History
+import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.ListHistoryBinding
 import com.thesis.eds.interfaces.RecyclerViewClickListener
 

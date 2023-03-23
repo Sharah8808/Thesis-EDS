@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.eds.R
 import com.thesis.eds.adapters.DiseaseListAdapter
-import com.thesis.eds.data.DiseaseList
+import com.thesis.eds.data.model.DiseaseList
 import com.thesis.eds.databinding.FragmentDiseaseListBinding
 import com.thesis.eds.ui.viewModels.DiseaseListViewModel
 import com.thesis.eds.interfaces.ActionBarTitleSetter

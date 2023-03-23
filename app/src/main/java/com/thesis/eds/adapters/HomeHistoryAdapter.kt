@@ -1,15 +1,11 @@
 package com.thesis.eds.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.thesis.eds.R
-import com.thesis.eds.data.History
+import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.ListHistoryBinding
 
 class HomeHistoryAdapter(private val listHistory: ArrayList<History>) : RecyclerView.Adapter<HomeHistoryAdapter.RVViewHolder>() {

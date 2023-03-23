@@ -3,7 +3,7 @@ package com.thesis.eds.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.thesis.eds.data.DiseaseList
+import com.thesis.eds.data.model.DiseaseList
 import com.thesis.eds.databinding.ListDiseaseListBinding
 
 class DiseaseListAdapter(private val listDisease: ArrayList<DiseaseList>) : RecyclerView.Adapter<DiseaseListAdapter.RVViewHolder>() {

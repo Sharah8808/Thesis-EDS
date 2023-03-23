@@ -24,8 +24,8 @@ import com.google.firebase.ktx.Firebase
 import com.thesis.eds.R
 import com.thesis.eds.adapters.DiseaseListAdapter
 import com.thesis.eds.adapters.HomeHistoryAdapter
-import com.thesis.eds.data.DiseaseList
-import com.thesis.eds.data.History
+import com.thesis.eds.data.model.DiseaseList
+import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.FragmentHomeBinding
 import com.thesis.eds.ui.viewModels.HomeViewModel
 import java.text.SimpleDateFormat

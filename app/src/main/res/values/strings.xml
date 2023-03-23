@@ -14,7 +14,7 @@
     <string name="menu_pengaturan">Pengaturan</string>
     <string name="menu_detail">Detail Riwayat Penyakit</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Registry yada yada -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Ketik email</string>
@@ -31,6 +31,16 @@
     <string name="singup_make_account">Buat Akun</string>
     <string name="forgot_password"><u>Lupa Password</u></string>
     <string name="sign_up_bottom"><u>Sign Up</u></string>
+    <string name="ganti_profil"><u>Ganti foto profil</u></string>
+
+    <!-- Settings yada yidi -->
+    <string name="nama_lengkap">Nama lengkap</string>
+    <string name="email">Email</string>
+    <string name="nomor_telepon">Nomor Telepon</string>
+    <string name="password_lama">Password Lama</string>
+    <string name="password_baru">Password Baru</string>
+    <string name="prompt_old_password">Ketik password lama</string>
+    <string name="prompt_new_password">Ketik password baru</string>
 
     <string-array name="history_name_temp">
         <item>Kazehaya Sakura</item>

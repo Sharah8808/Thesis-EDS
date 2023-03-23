@@ -1,4 +1,4 @@
-package com.thesis.eds.data
+package com.thesis.eds.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

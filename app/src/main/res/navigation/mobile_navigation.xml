@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_nav_setting_to_loginActivity"
             app:destination="@id/loginActivity" />
+        <action
+            android:id="@+id/action_nav_setting_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
 
     <fragment
@@ -73,4 +76,9 @@
         android:name="com.thesis.eds.ui.login.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.thesis.eds.ui.fragments.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>
