@@ -52,10 +52,16 @@ class SettingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        Toast.makeText(requireActivity(), "is setting oncliked cliked??", Toast.LENGTH_SHORT).show()
         when(v?.id){
             binding.textLogout.id -> {
                 firebaseAuth.signOut()
                 val action = SettingFragmentDirections.actionNavSettingToLoginActivity()
+                findNavController().navigate(action)
+            }
+            binding.buttonEditProfile.id -> {
+                Toast.makeText(requireActivity(), "is button edit profile cliked???", Toast.LENGTH_SHORT).show()
+                val action = SettingFragmentDirections.actionNavSettingToEditProfileFragment()
                 findNavController().navigate(action)
             }
         }
@@ -70,8 +76,6 @@ class SettingFragment : Fragment(), View.OnClickListener {
         Toast.makeText(requireActivity(), "is kierooo heerre?", Toast.LENGTH_SHORT).show()
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_pengaturan))
-        (activity as MenuItemHighlighter).setMenuHighlight(4)
-
     }
 
 

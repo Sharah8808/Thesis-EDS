@@ -13,6 +13,7 @@
     <string name="menu_daftar">Daftar Penyakit Telinga</string>
     <string name="menu_pengaturan">Pengaturan</string>
     <string name="menu_detail">Detail Riwayat Penyakit</string>
+    <string name="menu_edit_profil">Edit Profil</string>
 
     <!-- Registry yada yada -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

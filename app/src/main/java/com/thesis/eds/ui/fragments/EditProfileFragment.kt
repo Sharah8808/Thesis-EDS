@@ -3,6 +3,7 @@ package com.thesis.eds.ui.fragments
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toolbar
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -22,7 +24,9 @@ import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.thesis.eds.BuildConfig
+import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentEditProfileBinding
+import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
 import java.io.File
 import java.io.IOException
@@ -42,9 +46,13 @@ class EditProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
-        return binding.root
+        val root: View = binding.root
+        val toolbar: Toolbar? = root.findViewById(R.id.toolbar)
+        toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
+        toolbar?.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -113,6 +121,19 @@ class EditProfileFragment : Fragment() {
     }
 
 
+    override fun onAttach(context: Context) {
+//        Toast.makeText(requireActivity(), "is kierooo heerre? from detail detail frag", Toast.LENGTH_SHORT).show()
+        super.onAttach(context)
+        (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_edit_profil))
+
+
+        //   (activity as MenuItemHighlighter).setMenuHighlight(2)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 
 }

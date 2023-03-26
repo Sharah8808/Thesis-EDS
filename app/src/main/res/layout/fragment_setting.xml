@@ -111,6 +111,8 @@
             android:text="Edit Profil"
             android:textColor="@color/black"
             android:textSize="12dp"
+            android:clickable="true"
+            android:focusable="true"
             />
 
 
