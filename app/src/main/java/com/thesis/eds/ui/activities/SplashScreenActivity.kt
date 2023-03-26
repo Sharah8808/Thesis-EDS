@@ -1,11 +1,11 @@
-package com.thesis.eds
+package com.thesis.eds.ui.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.thesis.eds.ui.login.LoginActivity
+import com.thesis.eds.R
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {

@@ -161,7 +161,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
         userDocRef.get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    val userName = doc.getString("username")
+                    val userName = doc.getString("fullname")
                     binding.textGreetingsUsername.text = userName
                     Log.d(TAG, "User's name: $userName")
                 } else {

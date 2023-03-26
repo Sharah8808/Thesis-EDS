@@ -25,7 +25,7 @@ class DiagnosticFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val diagnosticViewModel =
-            ViewModelProvider(this).get(DiagnosticViewModel::class.java)
+            ViewModelProvider(this)[DiagnosticViewModel::class.java]
 
         _binding = FragmentDiagnosticBinding.inflate(inflater, container, false)
         val root: View = binding.root

@@ -1,4 +1,4 @@
-package com.thesis.eds
+package com.thesis.eds.ui.activities
 
 import android.os.Bundle
 import android.view.Menu
@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.thesis.eds.R
 import com.thesis.eds.databinding.ActivityMainBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
@@ -41,7 +42,11 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_diagnostic, R.id.nav_history, R.id.nav_disease_list, R.id.nav_setting
+                R.id.nav_home,
+                R.id.nav_diagnostic,
+                R.id.nav_history,
+                R.id.nav_disease_list,
+                R.id.nav_setting
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -1,11 +1,14 @@
 package com.thesis.eds.data.repository
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.thesis.eds.data.model.User
 
 class UserRepository {
 
@@ -26,5 +29,21 @@ class UserRepository {
 
     fun createUser(userId: String, userData: Map<String, Any>): Task<Void> {
         return usersCollection.document(userId).set(userData)
+    }
+
+    fun checkPassword(uid: String, password: String, callback: (Boolean) -> Unit) {
+        val docRef = usersCollection.document(uid)
+        docRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val user = documentSnapshot.toObject(User::class.java)
+                val isPasswordCorrect = user?.password == password
+                callback(isPasswordCorrect)
+            } else {
+                callback(false)
+            }
+        }.addOnFailureListener { e ->
+            Log.e(TAG, "Error checking password", e)
+            callback(false)
+        }
     }
 }

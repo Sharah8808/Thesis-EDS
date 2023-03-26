@@ -73,7 +73,7 @@
 
     <activity
         android:id="@+id/loginActivity"
-        android:name="com.thesis.eds.ui.login.LoginActivity"
+        android:name="com.thesis.eds.ui.activities.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
     <fragment

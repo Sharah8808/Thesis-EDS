@@ -28,7 +28,8 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
     private val list = ArrayList<History>()
 //    private lateinit var rvHistoryAdapter: HistoryAdapter
     private lateinit var viewModel : HistoryViewModel
-//    private val navControl = findNavController()
+
+    //    private val navControl = findNavController()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,10 +37,9 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
     ): View {
 
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
 
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
