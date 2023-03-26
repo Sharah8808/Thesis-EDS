@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -34,20 +35,22 @@ class SettingFragment : Fragment(), View.OnClickListener {
             ViewModelProvider(this).get(SettingViewModel::class.java)
 
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+//        val root: View = binding.root
 
         firebaseAuth = FirebaseAuth.getInstance()
-        val logout = binding.textLogout.setOnClickListener {
-            firebaseAuth.signOut()
-        }
-        return root
+//        val logout = binding.textLogout.setOnClickListener {
+//            firebaseAuth.signOut()
+//        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val logout : TextView = view.findViewById(binding.textLogout.id)
+        val editProfile : Button = view.findViewById(binding.buttonEditProfile.id)
 
         logout.setOnClickListener(this)
+        editProfile.setOnClickListener(this)
 
     }
 
