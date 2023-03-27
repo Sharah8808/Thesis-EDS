@@ -9,9 +9,11 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.thesis.eds.BuildConfig
 import com.thesis.eds.data.model.User
 import com.thesis.eds.data.repository.UserRepository
 import java.io.File
+import java.util.*
 
 class EditProfileViewModel : ViewModel() {
 
@@ -57,7 +59,7 @@ class EditProfileViewModel : ViewModel() {
                         }
                     } else {
                         // Display error message to the user
-                        Log.d(TAG, "Error update user data, password isnt correct")
+                        Log.d(TAG, "Error update user data, password isn't correct")
                     }
                 }
             }
@@ -100,7 +102,8 @@ class EditProfileViewModel : ViewModel() {
     fun createImageUri(context: Context): Uri {
         val imagesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val imageFile = File.createTempFile("profile", ".jpg", imagesDir)
-        imageUri = FileProvider.getUriForFile(context, "com.example.app.fileprovider", imageFile)
+        imageUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+ ".provider", imageFile)
+
         return imageUri!!
     }
 

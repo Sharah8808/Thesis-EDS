@@ -1,37 +1,22 @@
 package com.thesis.eds.ui.fragments
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toolbar
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.thesis.eds.BuildConfig
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentEditProfileBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class EditProfileFragment : Fragment() {
 
@@ -58,7 +43,6 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadUserData()
-
 
 //      Observe changes to the user's data in the ViewModel
         viewModel.user.observe(viewLifecycleOwner) { user ->
@@ -122,12 +106,8 @@ class EditProfileFragment : Fragment() {
 
 
     override fun onAttach(context: Context) {
-//        Toast.makeText(requireActivity(), "is kierooo heerre? from detail detail frag", Toast.LENGTH_SHORT).show()
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_edit_profil))
-
-
-        //   (activity as MenuItemHighlighter).setMenuHighlight(2)
     }
 
     override fun onDestroyView() {
