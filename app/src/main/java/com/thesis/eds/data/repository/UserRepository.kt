@@ -23,7 +23,7 @@ class UserRepository {
         return usersCollection.document(userId).get()
     }
 
-    fun updateUserData(userId: String, userData: Map<String, Any>): Task<Void> {
+    fun updateUserData(userId: String, userData: Map<String, String?>): Task<Void> {
         return usersCollection.document(userId).update(userData)
     }
 
@@ -37,6 +37,7 @@ class UserRepository {
             if (documentSnapshot.exists()) {
                 val user = documentSnapshot.toObject(User::class.java)
                 val isPasswordCorrect = user?.password == password
+                Log.e(TAG, "Old Password = ${user?.password} ----------- New password = $password")
                 callback(isPasswordCorrect)
             } else {
                 callback(false)

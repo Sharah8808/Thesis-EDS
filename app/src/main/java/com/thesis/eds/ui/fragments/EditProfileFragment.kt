@@ -13,10 +13,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentEditProfileBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
+import de.hdodenhof.circleimageview.CircleImageView
 
 class EditProfileFragment : Fragment() {
 
@@ -44,13 +46,33 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadUserData()
 
-//      Observe changes to the user's data in the ViewModel
+//        showPhotoProfile()
+
+        observeDataChanges()
+        updatePhotoProfile()
+
+        clickListenerForTheCircleImage()
+        clickListenerForTheSaveButton()
+    }
+
+    private fun observeDataChanges(){
+        //Observe changes to the user's data in the ViewModel
         viewModel.user.observe(viewLifecycleOwner) { user ->
             binding.etFullname.setText(user?.fullname)
             binding.etEmail.setText(user?.email)
             binding.etPhoneNumber.setText(user?.phoneNumber)
         }
+    }
 
+    private fun showPhotoProfile(){
+        val imgView : CircleImageView = binding.imgAvatar
+        val imgUri = viewModel.imageUri
+        Glide.with(this)
+            .load(imgUri)
+            .into(imgView)
+    }
+
+    private fun updatePhotoProfile(){
         // Initialize the ActivityResultLaunchers
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { result ->
             if (result) {
@@ -66,7 +88,9 @@ class EditProfileFragment : Fragment() {
                 viewModel.imageUri = uri
             }
         }
+    }
 
+    private fun clickListenerForTheCircleImage(){
         // Set an OnClickListener to the CircleImageView
         binding.imgAvatar.setOnClickListener {
             // Show a dialog with options to take a picture or select an image from the gallery
@@ -88,7 +112,9 @@ class EditProfileFragment : Fragment() {
             }
             builder.show()
         }
+    }
 
+    private fun clickListenerForTheSaveButton(){
         // Save changes when the save button is clicked
         binding.buttonSave.setOnClickListener {
             val newName = binding.etFullname.text.toString()
@@ -103,7 +129,6 @@ class EditProfileFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

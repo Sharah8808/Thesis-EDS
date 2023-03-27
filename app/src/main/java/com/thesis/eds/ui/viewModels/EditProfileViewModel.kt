@@ -4,7 +4,10 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.util.Base64
+import android.util.Base64.encodeToString
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +21,7 @@ import java.util.*
 class EditProfileViewModel : ViewModel() {
 
     private val userRepository = UserRepository()
+    private var imageBase64: String? = null
 
     private val _user = MutableLiveData<User?>()
     val user: MutableLiveData<User?>
@@ -48,14 +52,13 @@ class EditProfileViewModel : ViewModel() {
             updateUserDataWithoutPassword(currentUser.uid, newName, newEmail, newPhoneNumber)
         } else {
             // Check if old password matches current user's password
+            Log.d(TAG, "The old pass user typed?? == $oldPassword")
             oldPassword?.let {
-                userRepository.checkPassword(currentUser.uid, it) { isPasswordCorrect ->
+                userRepository.checkPassword(currentUser.uid, oldPassword) { isPasswordCorrect ->
                     if (isPasswordCorrect) {
                         // Update password
                         newPassword?.let { it1 ->
-                            updateUserDataWithPassword(currentUser.uid, newName, newEmail, newPhoneNumber,
-                                it1
-                            )
+                            updateUserDataWithPassword(currentUser.uid, newName, newEmail, newPhoneNumber, it1)
                         }
                     } else {
                         // Display error message to the user
@@ -70,7 +73,8 @@ class EditProfileViewModel : ViewModel() {
         val userData = mapOf(
             "fullname" to newName,
             "email" to newEmail,
-            "phoneNumber" to newPhoneNumber
+            "phoneNumber" to newPhoneNumber,
+            "img" to imageBase64
         )
 
         userRepository.updateUserData(uid, userData)
@@ -87,7 +91,8 @@ class EditProfileViewModel : ViewModel() {
             "fullname" to newName,
             "email" to newEmail,
             "phoneNumber" to newPhoneNumber,
-            "password" to newPassword
+            "password" to newPassword,
+            "img" to imageBase64
         )
 
         userRepository.updateUserData(uid, userData)
@@ -100,11 +105,26 @@ class EditProfileViewModel : ViewModel() {
     }
 
     fun createImageUri(context: Context): Uri {
-        val imagesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val imageFile = File.createTempFile("profile", ".jpg", imagesDir)
-        imageUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+ ".provider", imageFile)
+//        val imagesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+//        val imageFile = File.createTempFile("profile", ".jpg", imagesDir)
+//        imageUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+ ".provider", imageFile)
+//
+//        return imageUri!!
 
-        return imageUri!!
+        val imageName = "${System.currentTimeMillis()}.jpg"
+        val imageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File(imageDir, imageName)
+        imageFile.createNewFile()
+//        val authority = "${context.packageName}.fileprovider"
+        val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+ ".provider", imageFile)
+        imageBase64 = encodeImageToBase64(imageFile)
+        Log.d(TAG, "The imageBase64 ??? == $imageBase64 -------------------")
+        return uri
+    }
+
+    private fun encodeImageToBase64(imageFile: File): String {
+        val bytes = imageFile.readBytes()
+        return encodeToString(bytes, Base64.DEFAULT)
     }
 
 }
