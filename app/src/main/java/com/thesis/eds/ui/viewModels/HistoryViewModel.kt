@@ -5,6 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.thesis.eds.data.model.History
 import com.thesis.eds.utils.Dummy
 
-class HistoryViewModel(private val auth: FirebaseAuth) : ViewModel() {
+class HistoryViewModel: ViewModel() {
     fun getHistoryList():List<History> = Dummy.getDummyHistory()
 }

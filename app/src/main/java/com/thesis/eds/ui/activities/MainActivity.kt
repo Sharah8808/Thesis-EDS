@@ -33,6 +33,14 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
         setContentView(mainBinding.root)
 
         setSupportActionBar(mainBinding.appBarMain.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        if (mainBinding.appBarMain.toolbar != null) {
+//            setSupportActionBar(mainBinding.appBarMain.toolbar)
+//        } else {
+//            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        }
+
+
         val db = Firebase.firestore
 
         val drawerLayout: DrawerLayout = mainBinding.drawerLayout
@@ -110,6 +118,5 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
 //        Toast.makeText(this, "is highlight called on main?!?!?!", Toast.LENGTH_SHORT).show()
         idIndex?.let { navView.menu.getItem(it).setChecked(true) }
     }
-
 
 }

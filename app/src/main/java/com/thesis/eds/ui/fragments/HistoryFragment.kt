@@ -24,20 +24,14 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
 
     private val binding get() = _binding!!
     private var _binding: FragmentHistoryBinding? = null
-    private lateinit var rvHistory : RecyclerView
-    private val list = ArrayList<History>()
-//    private lateinit var rvHistoryAdapter: HistoryAdapter
     private lateinit var viewModel : HistoryViewModel
 
-    //    private val navControl = findNavController()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
-
 
         return binding.root
     }
@@ -50,19 +44,12 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
 
          val rvHistoryAdapter = HistoryAdapter(this@HistoryFragment)
         rvHistoryAdapter.setRVDataList(historyEntity)
-//        rvHistoryAdapter.listener = this
 
-//        rvHistory = binding.recyclerviewHistory
-//        rvHistory.setHasFixedSize(true)
         with(binding.recyclerviewHistory) {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = rvHistoryAdapter
         }
-
-//        list.addAll(getListHistory())
-//        showRecyclerList()
-//        clickUserList(rvHistoryAdapter)
 
     }
 
@@ -81,70 +68,9 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
     override fun onItemClicked(historyEntity: History) {
         Toast.makeText(requireActivity(), "test pindah ke detailleee", Toast.LENGTH_SHORT).show()
 
-//        val mCategoryFragment = DiagnosticDetailFragment()
-//        val mBundle = Bundle()
-//        mBundle.putInt(DiagnosticDetailFragment.EXTRA_DATA, historyEntity.id_history!!)
-//        mCategoryFragment.arguments = mBundle
-//        val mFragmentManager = parentFragmentManager
-//        mFragmentManager.beginTransaction().apply {
-//            replace(
-//                binding.frameHistoryFragment.id,
-//                mCategoryFragment,
-//                DiagnosticDetailFragment::class.java.simpleName
-//            )
-//            addToBackStack(null)
-//            setReorderingAllowed(true)
-//            commit()
-//        }
-
         val hisId = historyEntity.id_history
         val action = HistoryFragmentDirections.actionNavHistoryToNavDiagDetail(hisId!!)
         findNavController().navigate(action )
 
     }
-
-
-//    private fun clickUserList(adapter: HistoryAdapter) {
-//        Toast.makeText(requireActivity(), "apakah terpanggil", Toast.LENGTH_SHORT).show()
-//        adapter.setOnItemClickCallback(object :
-//            HistoryAdapter.OnItemClickCallback {
-//            override fun onItemClicked(history: History) {
-////                val rvDetailIntent = Intent(activity, RVDetailActivity::class.java)
-////                rvDetailIntent.putExtra(RVDetailActivity.EXTRA_BUNDLE, data)
-////                startActivity(rvDetailIntent)
-//                Toast.makeText(requireActivity(), "test pindah ke detail riwayat", Toast.LENGTH_SHORT).show()
-//                val mCategoryFragment = DiagnosticDetailFragment()
-//                val mFragmentManager = parentFragmentManager
-//                mFragmentManager.beginTransaction().apply {
-//                    replace(
-//                        binding.frameHistoryFragment.id,
-//                        mCategoryFragment,
-//                        DiagnosticDetailFragment::class.java.simpleName
-//                    )
-////                    binding.appBarLayout.setExpanded(true, true)
-//                    addToBackStack(null)
-//                    commit()
-//                }
-//            } })
-//    }
-
-
-
-//    override fun onItemClicked(entity: History) {
-////        rvHistoryAdapter.listener.onItemClicked()
-//
-//        val mCategoryFragment = DiagnosticDetailFragment()
-//        val mFragmentManager = parentFragmentManager
-//        mFragmentManager.beginTransaction().apply {
-//            Toast.makeText(requireActivity(), "history to detail?", Toast.LENGTH_SHORT).show()
-//            replace(
-//                binding.frameHistoryFragment.id,
-//                mCategoryFragment,
-//                DiagnosticDetailFragment::class.java.simpleName
-//            )
-////                    binding.appBarLayout.setExpanded(true, true)
-//            addToBackStack(null)
-//            commit()
-//        }
-//    }
 }

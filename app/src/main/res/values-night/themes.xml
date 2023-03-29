@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.TrialNavDrawer" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
+        <item name="android:textColor">#000000</item>
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/gray_base</item>
         <item name="colorOnPrimary">@color/black</item>
@@ -13,4 +14,26 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.TrialNavDrawer.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ThemeOverlay.MyNavigation" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:colorBackground">@color/gray_base</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.TrialNavDrawer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="Theme.TrialNavDrawer.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="Button.White" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+
+
 </resources>
+
