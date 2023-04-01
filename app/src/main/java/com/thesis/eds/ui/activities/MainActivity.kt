@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
     lateinit var appBarConfiguration: AppBarConfiguration
     lateinit var mainBinding: ActivityMainBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,14 +33,8 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
 
         setSupportActionBar(mainBinding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        if (mainBinding.appBarMain.toolbar != null) {
-//            setSupportActionBar(mainBinding.appBarMain.toolbar)
-//        } else {
-//            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        }
 
-
-        val db = Firebase.firestore
+//        val db = Firebase.firestore
 
         val drawerLayout: DrawerLayout = mainBinding.drawerLayout
         val navView: NavigationView = mainBinding.navView
@@ -92,7 +85,6 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
                 // Handle other menu items
                 else -> false
             }
-
         }
 
     }

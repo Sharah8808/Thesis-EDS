@@ -10,10 +10,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -27,6 +29,7 @@ import com.thesis.eds.adapters.HomeHistoryAdapter
 import com.thesis.eds.data.model.DiseaseList
 import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.FragmentHomeBinding
+import com.thesis.eds.ui.viewModels.EditProfileViewModel
 import com.thesis.eds.ui.viewModels.HomeViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,15 +39,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel : HomeViewModel
-    private lateinit var rvHistory : RecyclerView
+    private val viewModel by viewModels<HomeViewModel>()
     private val listHistory = ArrayList<History>()
     private val listDisease = ArrayList<DiseaseList>()
-
     private lateinit var firebaseAuth: FirebaseAuth
-    private val db = Firebase.firestore
-//    private lateinit var database: DatabaseReference
-//    companion object
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,60 +53,53 @@ class HomeFragment : Fragment(), View.OnClickListener {
         return binding.root
     }
 
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
-            viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HomeViewModel::class.java]
-            firebaseAuth = FirebaseAuth.getInstance()
-//            database = Firebase.database.reference
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.loadUserData()
+        firebaseAuth = FirebaseAuth.getInstance()
 
-            val textView: TextView = binding.textDate
-            val currentDayTime = dateApplicator(textView) + " "
-            greetings(currentDayTime)
+        val btnCategory: Button = view.findViewById(binding.buttonDiagnostic.id)
+        val textHistoryAll : TextView = view.findViewById(binding.textHistorySeeAll.id)
+        val textDiseaseListAll : TextView = view.findViewById(binding.textDiseaseListSeeAll.id)
+        btnCategory.setOnClickListener(this)
+        textHistoryAll.setOnClickListener(this)
+        textDiseaseListAll.setOnClickListener(this)
 
-            val btnCategory: Button = view.findViewById(binding.buttonDiagnostic.id)
-            val textHistoryAll : TextView = view.findViewById(binding.textHistorySeeAll.id)
-            val textDiseaseListAll : TextView = view.findViewById(binding.textDiseaseListSeeAll.id)
-            btnCategory.setOnClickListener(this)
-            textHistoryAll.setOnClickListener(this)
-            textDiseaseListAll.setOnClickListener(this)
+        greetingsWidget()
+        showAllRecyclerView()
+    }
 
-            val historyEntity = viewModel.getHistoryList()
-            val diseaseListEntity = viewModel.getDiseaseList()
+    private fun showAllRecyclerView() {
+        val historyEntity = viewModel.getHistoryList()
+        val diseaseListEntity = viewModel.getDiseaseList()
 
-            val rvhistoryAdapter = HomeHistoryAdapter(listHistory)
-            val rvDiseaseListAdapter = DiseaseListAdapter(listDisease)
-            rvhistoryAdapter.setRVDataList(historyEntity)
-            rvDiseaseListAdapter.setRVDataList(diseaseListEntity)
+        val rvhistoryAdapter = HomeHistoryAdapter(listHistory)
+        val rvDiseaseListAdapter = DiseaseListAdapter(listDisease)
+        rvhistoryAdapter.setRVDataList(historyEntity)
+        rvDiseaseListAdapter.setRVDataList(diseaseListEntity)
 
-            with(binding.homeScrollHistory){
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = rvhistoryAdapter
-            }
-
-            with(binding.homeScrollDiseaseList){
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = rvDiseaseListAdapter
-            }
-
-
-
+        with(binding.homeScrollHistory){
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = rvhistoryAdapter
         }
 
+        with(binding.homeScrollDiseaseList){
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = rvDiseaseListAdapter
+        }
+    }
         override fun onClick(v: View) {
-//            Toast.makeText(requireActivity(), "teessst", Toast.LENGTH_SHORT).show()
             when (v.id) {
                 R.id.button_diagnostic -> {
                     val action = HomeFragmentDirections.actionNavHomeToNavDiagnostic()
                     findNavController().navigate(action)
                 }
-
                 R.id.text_history_see_all -> {
                     val action = HomeFragmentDirections.actionNavHomeToNavHistory()
                     findNavController().navigate(action)
                 }
-
                 R.id.text_disease_list_see_all -> {
                     val action = HomeFragmentDirections.actionNavHomeToNavDiseaseList()
                     findNavController().navigate(action)
@@ -116,62 +107,27 @@ class HomeFragment : Fragment(), View.OnClickListener {
             }
         }
 
-    @SuppressLint("SimpleDateFormat")
-    fun dateApplicator(textView: TextView) : String{
-        val dateTime : String
-        val calendar : Calendar
-        val simpleDateFormat : SimpleDateFormat
+    private fun greetingsWidget(){
+        viewModel.formatDate()
+        viewModel.dateTime.observe(viewLifecycleOwner){ time ->
+            binding.textDate.text = time
+        }
+        binding.textGreetingsDayTime.text = viewModel.getGreeting()
+        viewModel.user.observe(viewLifecycleOwner){ user ->
+            binding.textGreetingsUsername.text = user?.fullname
+            val profilePictureUrl = user?.img
 
-        calendar = Calendar.getInstance()
-        simpleDateFormat = SimpleDateFormat("EEEE, dd LLLL yyyy")
-        dateTime = simpleDateFormat.format(calendar.time).toString()
-        textView.text = dateTime
-
-        val currentDay = when(calendar.get(Calendar.HOUR_OF_DAY)){
-            in 5 .. 11 -> {
-                "Selamat Pagi"
-            }
-            in 12 .. 15 -> {
-                "Selamat Siang"
-            }
-            in 16 .. 18 -> {
-                "Selamat Sore"
-            }
-            else -> {
-                "Selamat Malam"
+            if (profilePictureUrl != null) {
+                Glide.with(this)
+                    .load(profilePictureUrl)
+                    .into(binding.imgAvatar)
+            } else {
+                // Use a default image if the user doesn't have a profile picture
+                Glide.with(this)
+                    .load(R.drawable.chawieputh)
+                    .into(binding.imgAvatar)
             }
         }
-        return currentDay
-    }
-
-    private fun greetings(dayTime : String){
-        binding.textGreetingsDayTime.text = dayTime
-//        val reference = FirebaseDatabase.getInstance().getReference("users")
-
-        val currUser = firebaseAuth.currentUser
-        val uid = currUser?.uid
-
-        // Get a reference to the Firestore collection
-        val collectionRef = FirebaseFirestore.getInstance().collection("users")
-
-        // Query the collection to retrieve the user document with a specific ID
-        val userDocRef = collectionRef.document(uid!!)
-
-        // Retrieve the user's name field from the document
-        userDocRef.get()
-            .addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    val userName = doc.getString("fullname")
-                    binding.textGreetingsUsername.text = userName
-                    Log.d(TAG, "User's name: $userName")
-                } else {
-                    Log.d(TAG, "No such document!")
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.d(TAG, "Error getting document: ", e)
-            }
-
     }
 
     override fun onDestroyView() {

@@ -74,7 +74,7 @@ class EditProfileViewModel : ViewModel() {
             "fullname" to newName,
             "email" to newEmail,
             "phoneNumber" to newPhoneNumber,
-            "img" to imageBase64
+
         )
 
         userRepository.updateUserData(uid, userData)
@@ -92,7 +92,7 @@ class EditProfileViewModel : ViewModel() {
             "email" to newEmail,
             "phoneNumber" to newPhoneNumber,
             "password" to newPassword,
-            "img" to imageBase64
+
         )
 
         userRepository.updateUserData(uid, userData)
@@ -104,18 +104,26 @@ class EditProfileViewModel : ViewModel() {
             }
     }
 
-    fun createImageUri(context: Context): Uri {
-//        val imagesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-//        val imageFile = File.createTempFile("profile", ".jpg", imagesDir)
-//        imageUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+ ".provider", imageFile)
-//
-//        return imageUri!!
+    fun updateUserProfileImage(uriLink : String){
+        val imgData = mapOf(
+            "img" to uriLink
+        )
+        userRepository.updateUserData(userRepository.getCurrentUser().uid, imgData)
+            .addOnSuccessListener {
+                Log.d(TAG, "User data with password updated successfully!")
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "Error updating user data with password: ", e)
+            }
+    }
 
+
+
+    fun createImageUri(context: Context): Uri {
         val imageName = "${System.currentTimeMillis()}.jpg"
         val imageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val imageFile = File(imageDir, imageName)
         imageFile.createNewFile()
-//        val authority = "${context.packageName}.fileprovider"
         val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+ ".provider", imageFile)
         imageBase64 = encodeImageToBase64(imageFile)
         Log.d(TAG, "The imageBase64 ??? == $imageBase64 -------------------")

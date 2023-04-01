@@ -20,12 +20,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/lmao"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        tools:ignore="MissingConstraints"-->
-<!--        android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"/>-->
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

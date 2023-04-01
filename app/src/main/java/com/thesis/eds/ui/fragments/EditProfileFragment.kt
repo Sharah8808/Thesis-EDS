@@ -1,24 +1,42 @@
 package com.thesis.eds.ui.fragments
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import com.thesis.eds.BuildConfig
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentEditProfileBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
 import de.hdodenhof.circleimageview.CircleImageView
+import java.io.File
+import java.io.IOException
+import java.lang.Byte.decode
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EditProfileFragment : Fragment() {
 
@@ -28,6 +46,29 @@ class EditProfileFragment : Fragment() {
 
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var selectImageLauncher: ActivityResultLauncher<String>
+
+    private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            viewModel.imageUri?.let { imageUri ->
+                uploadImageToFirebaseStorage(imageUri)
+            }
+        }
+    }
+
+    private val choosePicture = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            viewModel.imageUri = it
+            binding.imgAvatar.setImageURI(it)
+            uploadImageToFirebaseStorage(it)
+        }
+    }
+
+
+    companion object {
+        const val REQUEST_IMAGE_CAPTURE = 1
+        const val REQUEST_IMAGE_PICK = 2
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +90,7 @@ class EditProfileFragment : Fragment() {
 //        showPhotoProfile()
 
         observeDataChanges()
-        updatePhotoProfile()
+//        updatePhotoProfile()
 
         clickListenerForTheCircleImage()
         clickListenerForTheSaveButton()
@@ -61,6 +102,18 @@ class EditProfileFragment : Fragment() {
             binding.etFullname.setText(user?.fullname)
             binding.etEmail.setText(user?.email)
             binding.etPhoneNumber.setText(user?.phoneNumber)
+            val profilePictureUrl = user?.img
+
+            if (profilePictureUrl != null) {
+                Glide.with(this)
+                    .load(profilePictureUrl)
+                    .into(binding.imgAvatar)
+            } else {
+                // Use a default image if the user doesn't have a profile picture
+                Glide.with(this)
+                    .load(R.drawable.chawieputh)
+                    .into(binding.imgAvatar)
+            }
         }
     }
 
@@ -100,10 +153,12 @@ class EditProfileFragment : Fragment() {
             builder.setItems(options) { dialog, item ->
                 when {
                     options[item] == "Take Photo" -> {
-                        takePictureLauncher.launch(viewModel.createImageUri(requireContext()))
+//                        takePictureLauncher.launch(viewModel.createImageUri(requireContext()))
+                        takePictureFromCamera()
                     }
                     options[item] == "Choose from Gallery" -> {
-                        selectImageLauncher.launch("image/*")
+//                        selectImageLauncher.launch("image/*")
+                        choosePictureFromGallery()
                     }
                     options[item] == "Cancel" -> {
                         dialog.dismiss()
@@ -130,6 +185,87 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+
+//    private fun showImagePickerDialog() {
+//        val options = arrayOf("Take Picture", "Choose from Gallery", "Cancel")
+//        val builder = AlertDialog.Builder(requireContext())
+//        builder.setItems(options) { _, which ->
+//            when (which) {
+//                0 -> takePicture.launch(viewModel.createImageUri(requireContext()))
+//                1 -> choosePicture.launch("image/*")
+//            }
+//        }
+//        builder.show()
+//    }
+
+    private fun takePictureFromCamera() {
+        if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            val photoFile = createImageFile()
+            val photoURI = FileProvider.getUriForFile(
+                requireContext(),
+                BuildConfig.APPLICATION_ID + ".provider",
+                photoFile
+            )
+            viewModel.imageUri = photoURI
+            takePicture.launch(photoURI)
+        } else {
+            Toast.makeText(requireContext(), "Camera not available", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun choosePictureFromGallery() {
+        choosePicture.launch("image/*")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {
+                    viewModel.imageUri?.let { imageUri ->
+                        uploadImageToFirebaseStorage(imageUri)
+                    }
+                }
+                REQUEST_IMAGE_PICK -> {
+//                    val imageUri = data?.data
+//                    imageUri?.let {
+//                        viewModel.imageUri = it
+//                        binding.imgAvatar.setImageURI(it)
+//                        uploadImageToFirebaseStorage(it)
+//                    }
+                    data?.let { choosePicture.launch(it.data.toString()) }
+                }
+            }
+        }
+    }
+
+    private fun uploadImageToFirebaseStorage(imageUri: Uri) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val storageRef = FirebaseStorage.getInstance().reference.child("images/$uid/profileImage.jpg")
+        val uploadTask = storageRef.putFile(imageUri)
+
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let { throw it }
+            }
+            storageRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloadUrl = task.result.toString()
+                viewModel.updateUserProfileImage(downloadUrl)
+            } else {
+                Toast.makeText(requireContext(), "Error uploading image", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun createImageFile(): File {
+        val imageName = "${System.currentTimeMillis()}.jpg"
+        val imageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(imageName, ".jpg", imageDir)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_edit_profil))
@@ -139,6 +275,5 @@ class EditProfileFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }
