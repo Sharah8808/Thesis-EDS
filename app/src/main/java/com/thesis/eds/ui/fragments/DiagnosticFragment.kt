@@ -2,6 +2,8 @@ package com.thesis.eds.ui.fragments
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
@@ -23,6 +25,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import com.thesis.eds.R
@@ -30,6 +33,7 @@ import com.thesis.eds.databinding.FragmentDiagnosticBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
 import com.thesis.eds.ui.viewModels.DiagnosticViewModel
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -68,9 +72,6 @@ class DiagnosticFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        val previewView : PreviewView = binding.cameraPreview
-
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -211,6 +212,34 @@ class DiagnosticFragment : Fragment() {
                                 }
                             }
                         )
+//                        // Convert the saved image file to bitmap
+//                        val bitmap = BitmapFactory.decodeFile(outputFile.absolutePath)
+//                        // Compress the bitmap to a stream and then convert the stream to a byte array
+//                        val stream = ByteArrayOutputStream()
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+//                        val byteArray = stream.toByteArray()
+//
+//                        // Create the navigation action and pass the byte array as an argument
+//                        val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(byteArray)
+//                        findNavController().navigate(action)
+
+                        // Convert the saved image file to bitmap
+                        val bitmap = BitmapFactory.decodeFile(outputFile.absolutePath)
+                        // Compress the bitmap to a stream and then convert the stream to a byte array
+                        val stream = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                        val byteArray = stream.toByteArray()
+
+                        // Create a bundle to pass the byte array as an argument
+                        val bundle = Bundle().apply {
+                            putByteArray("imageData", byteArray)
+                        }
+                        Log.d(TAG, "///////////////////////-------------------------------------- The pict location ??? ${bitmap}")
+
+                        // Create the navigation action and pass the bundle as an argument
+                        val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(bundle)
+                        findNavController().navigate(action)
+
 
                         //-----------------
 //                        val contentValues = ContentValues().apply {
@@ -235,13 +264,13 @@ class DiagnosticFragment : Fragment() {
 
                         // Show success message
                         Toast.makeText(requireContext(), "Photo saved to: ${outputFile.absolutePath}", Toast.LENGTH_LONG).show()
-                        Log.d(TAG, "Photo saved to: ${outputFile.absolutePath}")
+                        Log.d(TAG, "///////////////////////-------------------------------------- Photo saved to: ${outputFile.absolutePath}")
                     }
 
                     override fun onError(exception: ImageCaptureException) {
                         // Show error message
                         Toast.makeText(requireContext(), "Error saving photo: ${exception.message}", Toast.LENGTH_LONG).show()
-                        Log.e(TAG, "Error saving photo", exception)
+                        Log.e(TAG, "///////////////////////-------------------------------------- Error saving photo", exception)
                     }
                 }
             )
@@ -255,7 +284,6 @@ class DiagnosticFragment : Fragment() {
         return if (mediaDir != null && mediaDir.exists())
             mediaDir else requireActivity().filesDir
     }
-
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun animateFlash() {

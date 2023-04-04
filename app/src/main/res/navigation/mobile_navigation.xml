@@ -30,7 +30,11 @@
         android:id="@+id/nav_diagnostic"
         android:name="com.thesis.eds.ui.fragments.DiagnosticFragment"
         android:label="@string/menu_diagnosa"
-        tools:layout="@layout/fragment_diagnostic" />
+        tools:layout="@layout/fragment_diagnostic" >
+        <action
+            android:id="@+id/action_nav_diagnostic_to_cameraPreviewFragment"
+            app:destination="@id/cameraPreviewFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_history"
@@ -81,4 +85,14 @@
         android:name="com.thesis.eds.ui.fragments.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <dialog
+        android:id="@+id/cameraPreviewFragment"
+        android:name="com.thesis.eds.ui.fragments.CameraPreviewFragment"
+        android:label="fragment_camera_preview"
+        tools:layout="@layout/fragment_camera_preview" >
+        <argument
+            android:name="img_byte"
+            app:argType="android.os.Parcelable" />
+    </dialog>
+
 </navigation>
