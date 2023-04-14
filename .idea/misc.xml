@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/drawable/shape_bg_drawer_up.xml" value="0.279" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/drawable/shape_bottomsheet_dialog.xml" value="0.1" />
+        <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/drawable/shape_rectangle.xml" value="0.214" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/activity_login.xml" value="0.29322916666666665" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/activity_main.xml" value="0.29322916666666665" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/activity_sign_up.xml" value="0.29322916666666665" />
@@ -12,7 +13,7 @@
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/app_bar_main.xml" value="0.1" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/fragment_camera_preview.xml" value="0.1" />
-        <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/fragment_diagnostic.xml" value="0.25" />
+        <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/fragment_diagnostic.xml" value="0.33" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/fragment_diagnostic_detail.xml" value="0.29322916666666665" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/fragment_disease_list.xml" value="0.29322916666666665" />
         <entry key="..\:/SharAlNaja/codeTrymaker/thesis-eds/app/src/main/res/layout/fragment_edit_profile.xml" value="0.3052959501557632" />

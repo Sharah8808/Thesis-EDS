@@ -38,15 +38,13 @@ import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-
 class DiagnosticFragment : Fragment() {
 
     private var _binding: FragmentDiagnosticBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<DiagnosticViewModel>()
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var cameraSelector: CameraSelector
-
+    private val viewModel by viewModels<DiagnosticViewModel>()
     private var imageCapture: ImageCapture? = null
     private lateinit var imgCaptureExecutor: ExecutorService
 
@@ -80,7 +78,7 @@ class DiagnosticFragment : Fragment() {
         imgCaptureExecutor = Executors.newSingleThreadExecutor()
 
         startCamera()
-        binding.fabPhotoShot.setOnClickListener{
+        binding.buttonShot.setOnClickListener{
             takePhoto()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 animateFlash()
@@ -89,10 +87,9 @@ class DiagnosticFragment : Fragment() {
     }
 
     private fun startCamera(){
-        // listening for data from the camera
+//        // listening for data from the camera
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-
             // connecting a preview use case to the preview in the xml file.
             val preview = Preview.Builder().build().also{
                 it.setSurfaceProvider(binding.cameraPreview.surfaceProvider)
@@ -101,90 +98,23 @@ class DiagnosticFragment : Fragment() {
             try{
                 // clear all the previous use cases first.
                 cameraProvider.unbindAll()
-                // binding the lifecycle of the camera to the lifecycle of the application.
-//                cameraProvider.bindToLifecycle(this,cameraSelector,preview)
                 cameraProvider.bindToLifecycle(this,cameraSelector,preview,imageCapture)
             } catch (e: Exception) {
                 Log.d(TAG, "Use case binding failed")
             }
 
         },ContextCompat.getMainExecutor(requireContext()))
+
     }
-
-//    private fun takePhoto(){
-//        imageCapture?.let{
-//            // Create a Firebase Storage reference with a unique name
-//            val storageRef = Firebase.storage.reference
-//            val fileName = "images/JPEG_${System.currentTimeMillis()}"
-//            val imageRef = storageRef.child(fileName)
-//
-//            // Take the picture and upload it to Firebase Storage
-//            it.takePicture(imgCaptureExecutor, object : ImageCapture.OnImageCapturedCallback() {
-//                override fun onCaptureSuccess(image: ImageProxy) {
-//                    val buffer = image.planes[0].buffer
-//                    val bytes = ByteArray(buffer.capacity()).apply { buffer.get(this) }
-//                    val metadata = StorageMetadata.Builder().setContentType("image/jpeg").build()
-//                    imageRef.putBytes(bytes, metadata)
-//                        .addOnSuccessListener {
-//                            Log.d(TAG, "Image uploaded successfully to Firebase Storage with path: ${imageRef.path}")
-//                        }
-//                        .addOnFailureListener { exception ->
-//                            Log.e(TAG, "Error uploading image to Firebase Storage: ${exception.message}")
-//                        }
-//                    image.close()
-//                }
-//
-//                override fun onError(exception: ImageCaptureException) {
-//                    Toast.makeText(
-//                        binding.root.context,
-//                        "Error taking photo",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                    Log.d(TAG, "Error taking photo:$exception")
-//                }
-//            })
-//        }
-//    }
-
-//    private fun takePhoto(){
-//        imageCapture?.let{
-//            //Create a storage location whose fileName is timestamped in milliseconds.
-//            val fileName = "JPEG_${System.currentTimeMillis()}"
-//            val file = File(externalMediaDirs[0],fileName)
-//
-//            // Save the image in the above file
-//            val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file).build()
-//
-//            /* pass in the details of where and how the image is taken.(arguments 1 and 2 of takePicture)
-//            pass in the details of what to do after an image is taken.(argument 3 of takePicture) */
-//
-//            it.takePicture(
-//                outputFileOptions,
-//                imgCaptureExecutor,
-//                object : ImageCapture.OnImageSavedCallback {
-//                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults){
-//                        Log.i(TAG,"The image has been saved in ${file.toUri()}")
-//                    }
-//
-//                    override fun onError(exception: ImageCaptureException) {
-//                        Toast.makeText(
-//                            binding.root.context,
-//                            "Error taking photo",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                        Log.d(TAG, "Error taking photo:$exception")
-//                    }
-//
-//                })
-//        }
-//    }
 
     private fun takePhoto(){
         imageCapture?.let{ imageCapture ->
             // Create the output file with a unique name
             val fileName = "JPEG_${System.currentTimeMillis()}.jpg"
-            val outputDirectory = getOutputDirectory()
+//            val outputDirectory = getOutputDirectory()
+            val outputDirectory = viewModel.getOutputDirectory(requireActivity())
             val outputFile = File(outputDirectory, fileName)
+
             val lensFacing = CameraSelector.LENS_FACING_BACK // or CameraSelector.LENS_FACING_FRONT
             // Setup image capture metadata
             val metadata = ImageCapture.Metadata().apply {
@@ -201,7 +131,11 @@ class DiagnosticFragment : Fragment() {
             imageCapture.takePicture(
                 outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        //---------------
+
+                        val savedUri = Uri.fromFile(outputFile)
+                        viewModel.savePhoto(savedUri, requireContext(), requireActivity())
+
+                        //---------------utk scan file ada img baru
                         MediaScannerConnection.scanFile(
                             requireContext(),
                             arrayOf(outputFile.absolutePath),
@@ -212,16 +146,6 @@ class DiagnosticFragment : Fragment() {
                                 }
                             }
                         )
-//                        // Convert the saved image file to bitmap
-//                        val bitmap = BitmapFactory.decodeFile(outputFile.absolutePath)
-//                        // Compress the bitmap to a stream and then convert the stream to a byte array
-//                        val stream = ByteArrayOutputStream()
-//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-//                        val byteArray = stream.toByteArray()
-//
-//                        // Create the navigation action and pass the byte array as an argument
-//                        val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(byteArray)
-//                        findNavController().navigate(action)
 
                         // Convert the saved image file to bitmap
                         val bitmap = BitmapFactory.decodeFile(outputFile.absolutePath)
@@ -234,56 +158,75 @@ class DiagnosticFragment : Fragment() {
                         val bundle = Bundle().apply {
                             putByteArray("imageData", byteArray)
                         }
-                        Log.d(TAG, "///////////////////////-------------------------------------- The pict location ??? ${bitmap}")
 
                         // Create the navigation action and pass the bundle as an argument
                         val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(bundle)
                         findNavController().navigate(action)
 
-
-                        //-----------------
-//                        val contentValues = ContentValues().apply {
-//                            put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
-//                            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-//                        }
-//                        val uri = requireContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-//                        uri?.let {
-//                            try {
-//                                requireContext().contentResolver.openOutputStream(uri).use { outputStream ->
-//                                    val inputStream = FileInputStream(outputFile)
-//                                    inputStream.copyTo(outputStream!!)
-//                                    inputStream.close()
-//                                }
-//                                Log.d(TAG, "Saved image to gallery: ${uri.toString()}")
-//                            } catch (e: IOException) {
-//                                Log.e(TAG, "Error saving image to gallery", e)
-//                            }
-//                        }
-
-
-
                         // Show success message
                         Toast.makeText(requireContext(), "Photo saved to: ${outputFile.absolutePath}", Toast.LENGTH_LONG).show()
-                        Log.d(TAG, "///////////////////////-------------------------------------- Photo saved to: ${outputFile.absolutePath}")
                     }
-
                     override fun onError(exception: ImageCaptureException) {
                         // Show error message
                         Toast.makeText(requireContext(), "Error saving photo: ${exception.message}", Toast.LENGTH_LONG).show()
-                        Log.e(TAG, "///////////////////////-------------------------------------- Error saving photo", exception)
                     }
                 }
             )
         }
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = requireActivity().externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
-        }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else requireActivity().filesDir
-    }
+//    private fun takePhoto2() {
+////        val imageCapture = imageCapture ?: return
+//
+//        imageCapture?.let { imageCapture ->
+//
+//            // Create output file to hold the image
+//            val fileName = "JPEG_${System.currentTimeMillis()}.jpg"
+//            val photoFile = File(
+//                getOutputDirectory(),
+//                fileName
+//            )
+//
+//            val lensFacing = CameraSelector.LENS_FACING_BACK
+//            // Set up image capture metadata
+//            val metadata = ImageCapture.Metadata().apply {
+//                // Mirror image when using the front camera
+//                isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_BACK
+//            }
+//
+//
+//            // Create output options object which contains file + metadata
+//            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+//                .setMetadata(metadata)
+//                .build()
+//
+//
+//            // Capture the image using the imageCapture's takePicture method
+//            imageCapture.takePicture(
+//                outputOptions,
+//                ContextCompat.getMainExecutor(requireContext()),
+//                object : ImageCapture.OnImageSavedCallback {
+//                    override fun onError(exc: ImageCaptureException) {
+//                        Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
+//                    }
+//
+//                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+//                        val savedUri = Uri.fromFile(photoFile)
+//                        viewModel.savePhoto(savedUri) // Call the viewmodel method to save the photo
+//                        Log.d(TAG, "Photo capture succeeded: $savedUri")
+//                    }
+//                })
+//        }
+//    }
+//
+//
+//    private fun getOutputDirectory(): File {
+//        val mediaDir = requireActivity().externalMediaDirs.firstOrNull()?.let {
+//            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
+//        }
+//        return if (mediaDir != null && mediaDir.exists())
+//            mediaDir else requireActivity().filesDir
+//    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun animateFlash() {
