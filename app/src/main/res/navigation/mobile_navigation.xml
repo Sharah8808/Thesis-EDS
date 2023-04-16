@@ -33,7 +33,9 @@
         tools:layout="@layout/fragment_diagnostic" >
         <action
             android:id="@+id/action_nav_diagnostic_to_cameraPreviewFragment"
-            app:destination="@id/cameraPreviewFragment" />
+            app:destination="@id/cameraPreviewFragment"
+            app:popUpTo="@id/nav_diagnostic"
+            />
     </fragment>
 
     <fragment
@@ -93,6 +95,9 @@
         <argument
             android:name="img_byte"
             app:argType="android.os.Parcelable" />
+        <action
+            android:id="@+id/action_cameraPreviewFragment_to_nav_diagnostic"
+            app:destination="@id/nav_diagnostic" />
     </dialog>
 
 </navigation>

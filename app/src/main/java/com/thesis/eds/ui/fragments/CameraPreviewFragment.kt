@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -112,7 +113,9 @@ class CameraPreviewFragment : BottomSheetDialogFragment() {
                 .setCancelable(false)
                 .setPositiveButton("Iya") { _, _ ->
                     // Go back to the previous fragment and lose the current picture data
-                    requireActivity().onBackPressed()
+//                    requireActivity().onBackPressed()
+                    val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToNavDiagnostic()
+                    findNavController().navigate(action)
                 }
                 .setNegativeButton("Tidak") { dialog, _ ->
                     dialog.dismiss()

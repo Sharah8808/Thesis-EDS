@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.FragmentHomeBinding
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
 import com.thesis.eds.ui.viewModels.HomeViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 

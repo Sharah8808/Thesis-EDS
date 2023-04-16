@@ -125,23 +125,23 @@ class EditProfileFragment : Fragment() {
             .into(imgView)
     }
 
-    private fun updatePhotoProfile(){
-        // Initialize the ActivityResultLaunchers
-        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { result ->
-            if (result) {
-                // Update the CircleImageView with the taken picture
-                binding.imgAvatar.setImageURI(viewModel.imageUri)
-            }
-        }
-
-        selectImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            if (uri != null) {
-                // Update the CircleImageView with the selected image
-                binding.imgAvatar.setImageURI(uri)
-                viewModel.imageUri = uri
-            }
-        }
-    }
+//    private fun updatePhotoProfile(){
+//        // Initialize the ActivityResultLaunchers
+//        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { result ->
+//            if (result) {
+//                // Update the CircleImageView with the taken picture
+//                binding.imgAvatar.setImageURI(viewModel.imageUri)
+//            }
+//        }
+//
+//        selectImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+//            if (uri != null) {
+//                // Update the CircleImageView with the selected image
+//                binding.imgAvatar.setImageURI(uri)
+//                viewModel.imageUri = uri
+//            }
+//        }
+//    }
 
     private fun clickListenerForTheCircleImage(){
         // Set an OnClickListener to the CircleImageView
