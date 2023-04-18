@@ -92,12 +92,27 @@
         android:name="com.thesis.eds.ui.fragments.CameraPreviewFragment"
         android:label="fragment_camera_preview"
         tools:layout="@layout/fragment_camera_preview" >
-        <argument
-            android:name="img_byte"
-            app:argType="android.os.Parcelable" />
         <action
             android:id="@+id/action_cameraPreviewFragment_to_nav_diagnostic"
             app:destination="@id/nav_diagnostic" />
+        <argument
+            android:name="uri_args"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_cameraPreviewFragment_to_diagnosticResultFragment"
+            app:destination="@id/diagnosticResultFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/diagnosticResultFragment"
+        android:name="com.thesis.eds.ui.fragments.DiagnosticResultFragment"
+        android:label="fragment_diagnostic_result"
+        tools:layout="@layout/fragment_diagnostic_result" >
+        <argument
+            android:name="uri_args"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_diagnosticResultFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
 
 </navigation>

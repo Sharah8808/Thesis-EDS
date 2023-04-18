@@ -2,21 +2,14 @@ package com.thesis.eds.ui.fragments
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.provider.MediaStore
-import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -26,9 +19,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentCameraPreviewBinding
-import com.thesis.eds.ui.activities.MainActivity
-import java.io.File
-import java.io.FileInputStream
 
 class CameraPreviewFragment : BottomSheetDialogFragment() {
 
@@ -36,7 +26,8 @@ class CameraPreviewFragment : BottomSheetDialogFragment() {
     private lateinit var imageBitmap: Bitmap
     private val args : CameraPreviewFragmentArgs by navArgs()
     private lateinit var parentContext: Context
-
+    private lateinit var historyName : String
+//    private val viewModel by viewModels<CameraPreviewViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,34 +41,29 @@ class CameraPreviewFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bundle = args.imgByte as? Bundle
-        val imageData = bundle?.getByteArray("imageData")
-        // Convert the byte array to a Bitmap
-        if (imageData != null) {
-            imageBitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
-            binding.imgCameraPreview.setImageBitmap(imageBitmap)
-        } else {
-            Glide.with(this)
-                .load(R.drawable.dislist_yuuya)
-                .transform(RoundedCorners(20))
-                .into(binding.imgCameraPreview)
-            // handle the case where the image data is null
-        }
-
-        dialog?.setCancelable(true)
-
-//        dialog?.setOnCancelListener {
-//                showAlertDialog(parentContext)
-//        }
-
+        val uri = args.uriArgs
+        Glide.with(this)
+            .load(uri)
+            .transform(RoundedCorners(20))
+            .into(binding.imgCameraPreview)
 
         dialog?.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                showAlertDialog(parentContext)
+                showExitAlertDialog(parentContext)
                 true
             } else {
                 false
             }
+        }
+
+        binding.buttonNo.setOnClickListener{
+            val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToNavDiagnostic()
+            findNavController().navigate(action)
+        }
+
+        binding.buttonYes.setOnClickListener{
+            val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToDiagnosticResultFragment(uri)
+            findNavController().navigate(action)
         }
     }
 
@@ -104,16 +90,13 @@ class CameraPreviewFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
-    private fun showAlertDialog(context : Context) {
+    private fun showExitAlertDialog(context : Context) {
             val alertDialogBuilder = AlertDialog.Builder(context)
-            // rest of your code
             alertDialogBuilder.setTitle("Confirmation")
-//            val alertDialogBuilder = AlertDialog.Builder(requireContext())
             alertDialogBuilder.setMessage("Kembali ke halaman sebelumnya?")
                 .setCancelable(false)
                 .setPositiveButton("Iya") { _, _ ->
                     // Go back to the previous fragment and lose the current picture data
-//                    requireActivity().onBackPressed()
                     val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToNavDiagnostic()
                     findNavController().navigate(action)
                 }
@@ -122,8 +105,6 @@ class CameraPreviewFragment : BottomSheetDialogFragment() {
                 }
 
             val alertDialog = alertDialogBuilder.create()
-//            dialog?.setCancelable(false)
-//            dialog?.setCanceledOnTouchOutside(true)
             alertDialog.show()
     }
 

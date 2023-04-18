@@ -66,8 +66,8 @@ class DiagnosticFragment : Fragment() {
             viewModel.outputFilePath.observe(viewLifecycleOwner) { filePath ->
                 if (filePath != null) {
                     mediaScanner(filePath)
-                    val bundle = bundlingImage(filePath)
-                    navigateToCamPreview(bundle)
+//                    val bundle = bundlingImage(filePath)
+                    navigateToCamPreview(uri.toString())
                 } else {
                     // handle null file path
                     Log.d(TAG, "!!!!!!!!!!!!!!!!!!!!!!!!!!! Well bye byeee no filepath sadge")
@@ -175,8 +175,8 @@ class DiagnosticFragment : Fragment() {
                             viewModel.outputFilePath.observe(viewLifecycleOwner) { filePath ->
                                 if (filePath != null) {
                                     mediaScanner(filePath)
-                                    val bundle = bundlingImage(filePath)
-                                    navigateToCamPreview(bundle)
+//                                    val bundle = bundlingImage(filePath)
+                                    navigateToCamPreview(savedUri.toString())
                                 } else {
                                     // handle null file path
                                     Log.d(TAG, "!!!!!!!!!!!!!!!!!!!!!!!!!!! Well bye byeee no filepath sadge")
@@ -211,9 +211,9 @@ class DiagnosticFragment : Fragment() {
         return bundle
     }
 
-    private fun navigateToCamPreview(bundle: Bundle){
+    private fun navigateToCamPreview(uri: String){
         // Create the navigation action and pass the bundle as an argument
-        val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(bundle)
+        val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(uri)
         findNavController().navigate(action)
     }
 
