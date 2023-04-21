@@ -28,13 +28,13 @@ class DiagnosticResultViewModel: ViewModel() {
     var uri : Uri? = null
 
     fun createNewHistory(predictRes : String, actualRes: String, imgUri : Uri){
-        uploadImageToFirebaseStorage(imgUri)
+        uploadImageToFirebaseStorage(imgUri, actualRes)
 
         val currentTimeStamp = getCurrentTimestamp()
         val currentUserId = historyRepository.getCurrentUser().uid
         val uriString = imgUri.toString()
         val history = HistoryDb(
-            "Diagnose result $currentTimeStamp",
+            "Diagnose result ${getTimestampForTitle()}",
             currentTimeStamp,
             currentUserId,
             predictRes,
@@ -54,11 +54,12 @@ class DiagnosticResultViewModel: ViewModel() {
         }
     }
 
-    private fun uploadImageToFirebaseStorage(imageUri: Uri) {
+    private fun uploadImageToFirebaseStorage(imageUri: Uri, actualName: String) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val fileNameDate = getTimestampForTitle()
         FirebaseStorage.getInstance()
             .reference
-            .child("result images/$uid/the actual result.jpg")
+            .child("result images/$uid/$actualName - $fileNameDate.jpg")
             .putFile(imageUri)
 
     }
@@ -66,6 +67,12 @@ class DiagnosticResultViewModel: ViewModel() {
     private fun getCurrentTimestamp(): String {
         val timestamp = Timestamp.now().toDate()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return dateFormat.format(timestamp)
+    }
+
+    private fun getTimestampForTitle(): String {
+        val timestamp = Timestamp.now().toDate()
+        val dateFormat = SimpleDateFormat("h:mm", Locale.getDefault())
         return dateFormat.format(timestamp)
     }
 }

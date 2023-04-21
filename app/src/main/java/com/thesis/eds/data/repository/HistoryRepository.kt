@@ -27,10 +27,6 @@ class HistoryRepository {
         return historiesCollection.document(historyId).update(historyData)
     }
 
-    fun createHistory(historyId: String, historyData: Map<String, Any>): Task<Void> {
-        return historiesCollection.document(historyId).set(historyData)
-    }
-
     fun addHistory(history: HistoryDb) : Task<Void> {
         return historiesCollection.add(history)
             .continueWithTask { documentReference ->

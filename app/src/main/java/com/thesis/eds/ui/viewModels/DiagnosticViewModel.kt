@@ -22,8 +22,16 @@ class DiagnosticViewModel : ViewModel() {
     val outputFilePath: LiveData<String>
         get() = _outputFilePath
 
+    private var isSavingPhoto = false
 
     fun savePhoto(uri: Uri, context : Context, activity : Activity) {
+        if (isSavingPhoto) {
+            Log.d(TAG, "eehhh anothe coroutinee???    --------------------------------")
+            // Another coroutine is already running, so do nothing
+            return
+        }
+        isSavingPhoto = true
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val inputStream = context.contentResolver.openInputStream(uri)
@@ -42,6 +50,9 @@ class DiagnosticViewModel : ViewModel() {
                 Log.d(TAG, "Photo saved to local storage.")
             } catch (e: IOException) {
                 Log.e(TAG, "Error saving photo to local storage: ${e.message}", e)
+            } finally {
+                // Reset the flag to allow another coroutine to run
+                isSavingPhoto = false
             }
         }
     }

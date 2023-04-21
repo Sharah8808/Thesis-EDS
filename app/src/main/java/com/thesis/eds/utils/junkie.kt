@@ -1,13 +1,9 @@
 package com.thesis.eds.utils
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.provider.MediaStore
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContentProviderCompat.requireContext
+import android.os.Bundle
+import java.io.ByteArrayOutputStream
 
 class junkie {
 
@@ -120,4 +116,111 @@ class junkie {
 //            }
 //        }
 //    }
+
+
+    private fun bundlingImage(filePath : String): Bundle {
+        // Convert the saved image file to bitmap
+        val bitmap = BitmapFactory.decodeFile(filePath)
+        // Compress the bitmap to a stream and then convert the stream to a byte array
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        val byteArray = stream.toByteArray()
+
+        // Create a bundle to pass the byte array as an argument
+        val bundle = Bundle().apply {
+            putByteArray("imageData", byteArray)
+        }
+        return bundle
+    }
 }
+
+//class CameraPreviewFragment : BottomSheetDialogFragment() {
+//
+//    private lateinit var binding: FragmentCameraPreviewBinding
+//    private val args : CameraPreviewFragmentArgs by navArgs()
+//    private lateinit var parentContext: Context
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        binding = FragmentCameraPreviewBinding.inflate(inflater, container, false)
+//        return binding.root
+//    }
+//
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        val uri = args.uriArgs
+//        Glide.with(this)
+//            .load(uri)
+//            .transform(RoundedCorners(20))
+//            .into(binding.imgCameraPreview)
+//
+//        dialog?.setOnKeyListener { _, keyCode, event ->
+//            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+//                showExitAlertDialogCamView(parentContext)
+//                true
+//            } else {
+//                false
+//            }
+//        }
+//
+//        binding.buttonNo.setOnClickListener{
+//            val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToNavDiagnostic()
+//            findNavController().navigate(action)
+//        }
+//
+//        binding.buttonYes.setOnClickListener{
+//            val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToDiagnosticResultFragment(uri)
+//            findNavController().navigate(action)
+//        }
+//    }
+//
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        val dialog = BottomSheetDialog(requireContext(), R.style.AppTheme_BottomSheetDialog)
+//        dialog.setCancelable(true)
+//        dialog.setCanceledOnTouchOutside(false)
+//        dialog.setContentView(R.layout.fragment_camera_preview)
+//
+//        //Get the screen height
+//        val screenHeight = resources.displayMetrics.heightPixels
+//
+//        // Set the peek height to a value that is tall enough to show all the views
+//        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+//        dialog.setOnShowListener {
+//            val bottomSheetDialog = it as BottomSheetDialog
+//            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+//            bottomSheet?.let { it2 ->
+//                val peekHeight = screenHeight - resources.getDimensionPixelSize(R.dimen.bottom_sheet_margin_bottom)
+//                BottomSheetBehavior.from(it2).peekHeight = peekHeight
+//            }
+//        }
+//        return dialog
+//    }
+//
+//    private fun showExitAlertDialogCamView(context : Context) {
+//        val alertDialogBuilder = AlertDialog.Builder(context)
+//        alertDialogBuilder.setTitle("Confirmation")
+//        alertDialogBuilder.setMessage("Kembali ke halaman sebelumnya?")
+//            .setCancelable(false)
+//            .setPositiveButton("Iya")  { _, _ ->
+//                // Go back to the previous fragment and lose the current picture data
+//                val action = CameraPreviewFragmentDirections.actionCameraPreviewFragmentToNavDiagnostic()
+//                findNavController().navigate(action)
+//            }
+//            .setNegativeButton("Tidak") { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//
+//        val alertDialog = alertDialogBuilder.create()
+//        alertDialog.show()
+//    }
+//
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        parentContext = requireActivity()
+//    }
+//
+//}

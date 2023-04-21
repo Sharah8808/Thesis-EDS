@@ -1,9 +1,9 @@
 package com.thesis.eds.ui.fragments
 
+import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
@@ -11,10 +11,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -28,15 +32,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import com.thesis.eds.R
+import com.thesis.eds.databinding.FragmentCameraPreviewBinding
 import com.thesis.eds.databinding.FragmentDiagnosticBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
 import com.thesis.eds.ui.viewModels.DiagnosticViewModel
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -50,6 +58,10 @@ class DiagnosticFragment : Fragment() {
     private val viewModel by viewModels<DiagnosticViewModel>()
     private var imageCapture: ImageCapture? = null
     private lateinit var imgCaptureExecutor: ExecutorService
+//    private var uriResult : Uri? = null
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+
+    private var onBackPressedCallback: OnBackPressedCallback? = null
 
     private val cameraProviderResult = registerForActivityResult(ActivityResultContracts.RequestPermission()){ permissionGranted->
         if(permissionGranted){
@@ -61,13 +73,19 @@ class DiagnosticFragment : Fragment() {
     }
 
     private val choosePictureGallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
         uri?.let {
             viewModel.savePhoto(uri, requireContext(), requireActivity())
             viewModel.outputFilePath.observe(viewLifecycleOwner) { filePath ->
                 if (filePath != null) {
+//                    uriResult = null
+//                    uriResult = uri
+                    Log.d(TAG, "is there uriii from gallery ?? = $uri               ----------------------------------------------")
+                    Log.d(TAG, "what is the filepath value from gallery?? = ${viewModel.outputFilePath.value!!}               ----------------------------------------------")
+
                     mediaScanner(filePath)
-//                    val bundle = bundlingImage(filePath)
-                    navigateToCamPreview(uri.toString())
+//                    showBottomSheetDialog(uri)
+                    navigateToDiagResultFragment(uri.toString())
                 } else {
                     // handle null file path
                     Log.d(TAG, "!!!!!!!!!!!!!!!!!!!!!!!!!!! Well bye byeee no filepath sadge")
@@ -83,14 +101,22 @@ class DiagnosticFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiagnosticBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        Toast.makeText(requireActivity(), "hoopplaaaa", Toast.LENGTH_SHORT).show()
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+//
+//            Log.d(ContentValues.TAG, "Is the toolbar clicklistener calledd??????  on the createvieeww ================================== and the toolbar = ${requireContext()}")
+//            val action = DiagnosticFragmentDirections.actionNavDiagnosticToNavHome()
+//            findNavController().navigate(action)
+//        }.apply {
+//            isEnabled = true
+//        }
+
+//        bottomSheetDialog = BottomSheetDialog(requireContext())
 
         val navController = findNavController()
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
@@ -99,13 +125,13 @@ class DiagnosticFragment : Fragment() {
 
         imgCaptureExecutor = Executors.newSingleThreadExecutor()
 
-        lifecycleScope.launch {
-            startCamera()
-        }
+//        lifecycleScope.launch{
+//            startCamera()
+//        }
 
         binding.buttonShot.setOnClickListener{
-            val currentFragmentId = navController.currentDestination?.id
-            Log.d("Current Fragment ID", currentFragmentId.toString() + " the current frag id ==========================================")
+//            val currentFragmentId = navController.currentDestination?.id
+//            Log.d("Current Fragment ID", currentFragmentId.toString() + " the current frag id ==========================================")
             takePhoto()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 animateFlash()
@@ -119,6 +145,57 @@ class DiagnosticFragment : Fragment() {
         }
 
     }
+
+//    private fun showBottomSheetDialog(uri: Uri) {
+//        bottomSheetDialog = BottomSheetDialog(requireContext())
+//        Log.d(TAG, "what is the uri to bottomsheeet ?? = $uri               ----------------------------------------------")
+//        bottomSheetDialog.setCancelable(true)
+//        bottomSheetDialog.setCanceledOnTouchOutside(false)
+//        bottomSheetDialog.setContentView(R.layout.fragment_camera_preview)
+//
+//        //Get the screen height
+//        val screenHeight = resources.displayMetrics.heightPixels
+//
+//        bottomSheetDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+//        bottomSheetDialog.setOnShowListener {
+//            val bottomSheetDialog = it as BottomSheetDialog
+//            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+//            bottomSheet?.let { it2 ->
+//                val peekHeight = screenHeight - resources.getDimensionPixelSize(R.dimen.bottom_sheet_margin_bottom)
+//                BottomSheetBehavior.from(it2).peekHeight = peekHeight
+//
+//                val resultImg = it2.findViewById<ImageView>(R.id.img_camera_preview)
+//                val yesButton = it2.findViewById<Button>(R.id.button_yes)
+//                val noButton = it2.findViewById<Button>(R.id.button_no)
+//
+//                Glide.with(this)
+//                    .load(uri)
+//                    .transform(RoundedCorners(20))
+//                    .into(resultImg)
+//
+//                yesButton.setOnClickListener{
+//                    val action = DiagnosticFragmentDirections.actionNavDiagnosticToDiagnosticResultFragment(uri.toString())
+//                    findNavController().navigate(action)
+//                    bottomSheetDialog.dismiss()
+//                }
+//
+//                noButton.setOnClickListener{
+//                    bottomSheetDialog.dismiss()
+//                }
+//
+//                it2.setOnKeyListener { _, keyCode, event ->
+//                    if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+//                            bottomSheetDialog.dismiss()
+//                        true
+//                    } else {
+//                        false
+//                    }
+//                }
+//            }
+//
+//        }
+//        bottomSheetDialog.show()
+//    }
 
     private fun choosePictureFromGallery() {
         choosePictureGallery.launch("image/*")
@@ -149,7 +226,6 @@ class DiagnosticFragment : Fragment() {
             imageCapture?.let{ imageCapture ->
                 // Create the output file with a unique name
                 val fileName = "JPEG_${System.currentTimeMillis()}.jpg"
-//            val outputDirectory = getOutputDirectory()
                 val outputDirectory = viewModel.getOutputDirectory(requireActivity())
                 val outputFile = File(outputDirectory, fileName)
 
@@ -174,9 +250,14 @@ class DiagnosticFragment : Fragment() {
                             viewModel.savePhoto(savedUri, requireContext(), requireActivity())
                             viewModel.outputFilePath.observe(viewLifecycleOwner) { filePath ->
                                 if (filePath != null) {
+//                                    uriResult = null
+//                                    uriResult = savedUri
+                                    Log.d(TAG, "is there uriii from cameraa ?? = $savedUri               ----------------------------------------------")
+                                    Log.d(TAG, "what is the filepath value from cammera?? = ${viewModel.outputFilePath.value!!}               ----------------------------------------------")
+
                                     mediaScanner(filePath)
-//                                    val bundle = bundlingImage(filePath)
-                                    navigateToCamPreview(savedUri.toString())
+//                                    showBottomSheetDialog(savedUri)
+                                    navigateToDiagResultFragment(savedUri.toString())
                                 } else {
                                     // handle null file path
                                     Log.d(TAG, "!!!!!!!!!!!!!!!!!!!!!!!!!!! Well bye byeee no filepath sadge")
@@ -196,24 +277,8 @@ class DiagnosticFragment : Fragment() {
         }
     }
 
-    private fun bundlingImage(filePath : String): Bundle{
-        // Convert the saved image file to bitmap
-        val bitmap = BitmapFactory.decodeFile(filePath)
-        // Compress the bitmap to a stream and then convert the stream to a byte array
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        val byteArray = stream.toByteArray()
-
-        // Create a bundle to pass the byte array as an argument
-        val bundle = Bundle().apply {
-            putByteArray("imageData", byteArray)
-        }
-        return bundle
-    }
-
-    private fun navigateToCamPreview(uri: String){
-        // Create the navigation action and pass the bundle as an argument
-        val action = DiagnosticFragmentDirections.actionNavDiagnosticToCameraPreviewFragment(uri)
+    private fun navigateToDiagResultFragment(uri : String){
+        val action = DiagnosticFragmentDirections.actionNavDiagnosticToDiagnosticResultFragment(uri)
         findNavController().navigate(action)
     }
 
@@ -250,5 +315,10 @@ class DiagnosticFragment : Fragment() {
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_diagnosa))
         (activity as MenuItemHighlighter).setMenuHighlight(1)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

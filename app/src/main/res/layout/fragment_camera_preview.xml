@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_bottomsheet_dialog"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.CameraPreviewFragment"
     android:padding="20dp"
     android:clickable="true"
     android:focusable="true">

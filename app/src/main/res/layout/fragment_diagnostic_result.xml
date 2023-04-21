@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context=".ui.fragments.DiagnosticResultFragment"
-    android:background="@drawable/detail_bg">
+    android:background="@drawable/detail_bg"
+    android:id="@+id/diagnostic_result_frag">
 
     <ImageView
         android:id="@+id/img_result"

@@ -1,12 +1,17 @@
 package com.thesis.eds.ui.activities
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -18,10 +23,11 @@ import com.thesis.eds.R
 import com.thesis.eds.databinding.ActivityMainBinding
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
+import com.thesis.eds.ui.fragments.DiagnosticResultFragment
+import com.thesis.eds.utils.DialogUtils
 
 class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighlighter {
 
-    //from private
     lateinit var appBarConfiguration: AppBarConfiguration
     lateinit var mainBinding: ActivityMainBinding
 
@@ -30,11 +36,8 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
 
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
-
         setSupportActionBar(mainBinding.appBarMain.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-//        val db = Firebase.firestore
 
         val drawerLayout: DrawerLayout = mainBinding.drawerLayout
         val navView: NavigationView = mainBinding.navView
@@ -86,8 +89,18 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
                 else -> false
             }
         }
-
     }
+
+//    override fun onBackPressed() {
+//        val navController = findNavController(R.id.nav_host_fragment_content_main)
+//        if (navController.currentDestination?.id == R.id.nav_home) {
+//            // If the current destination is the home fragment, exit the app
+//            super.onBackPressed()
+//        } else {
+//            // Otherwise, navigate up in the navigation hierarchy
+//            navController.navigateUp()
+//        }
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -95,8 +108,27 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        Log.d(ContentValues.TAG, " di MAINACITIVTY AAA current navcont = ${navController.currentDestination?.id}          !!!  ---------------------------------------------- r.id diagresult frag? ${R.id.diagnosticResultFragment}")
+
+        when (item.itemId) {
+            android.R.id.home -> {
+                if (navController.currentDestination?.id == R.id.diagnosticResultFragment) {
+                    Log.d(ContentValues.TAG, " di MAINACITIVTY AAA di dalem fungsi wen HOME HOME current navcont = ${navController.currentDestination?.id}          !!!  ---------------------------------------------- r.id diagresult frag? ${R.id.diagnosticResultFragment}")
+                    DialogUtils.showExitAlertDialog(this) {
+                        // Go back to the previous fragment and lose the current picture data
+                        navController.navigateUp()
+                    }
+//                    navController.navigateUp()
+                    return true
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onSupportNavigateUp(): Boolean {
-//        Toast.makeText(this, "ORAOROAORA", Toast.LENGTH_SHORT).show()
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
@@ -107,7 +139,6 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
 
     override fun setMenuHighlight(idIndex: Int?) {
         val navView: NavigationView = mainBinding.navView
-//        Toast.makeText(this, "is highlight called on main?!?!?!", Toast.LENGTH_SHORT).show()
         idIndex?.let { navView.menu.getItem(it).setChecked(true) }
     }
 

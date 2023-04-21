@@ -32,10 +32,8 @@
         android:label="@string/menu_diagnosa"
         tools:layout="@layout/fragment_diagnostic" >
         <action
-            android:id="@+id/action_nav_diagnostic_to_cameraPreviewFragment"
-            app:destination="@id/cameraPreviewFragment"
-            app:popUpTo="@id/nav_diagnostic"
-            />
+            android:id="@+id/action_nav_diagnostic_to_diagnosticResultFragment"
+            app:destination="@id/diagnosticResultFragment" />
     </fragment>
 
     <fragment
@@ -87,21 +85,6 @@
         android:name="com.thesis.eds.ui.fragments.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
-    <dialog
-        android:id="@+id/cameraPreviewFragment"
-        android:name="com.thesis.eds.ui.fragments.CameraPreviewFragment"
-        android:label="fragment_camera_preview"
-        tools:layout="@layout/fragment_camera_preview" >
-        <action
-            android:id="@+id/action_cameraPreviewFragment_to_nav_diagnostic"
-            app:destination="@id/nav_diagnostic" />
-        <argument
-            android:name="uri_args"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_cameraPreviewFragment_to_diagnosticResultFragment"
-            app:destination="@id/diagnosticResultFragment" />
-    </dialog>
     <fragment
         android:id="@+id/diagnosticResultFragment"
         android:name="com.thesis.eds.ui.fragments.DiagnosticResultFragment"
@@ -112,7 +95,11 @@
             app:argType="string" />
         <action
             android:id="@+id/action_diagnosticResultFragment_to_nav_home"
-            app:destination="@id/nav_home" />
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true"
+            />
+
     </fragment>
 
 </navigation>
