@@ -45,5 +45,11 @@
         <item name="android:paddingEnd">20dp</item>
     </style>
 
+    <style name="ImageButtonWithShadow" parent="@android:style/Widget.ImageButton">
+        <item name="android:background">@drawable/bg_imgbutton</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
 
 </resources>

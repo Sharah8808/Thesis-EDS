@@ -5,73 +5,84 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.thesis.eds.data.model.History
+import com.thesis.eds.data.model.HistoryDb
 import com.thesis.eds.databinding.ListHistoryBinding
 import com.thesis.eds.interfaces.RecyclerViewClickListener
 
-class HistoryAdapter(private val onItemClickCallback : RecyclerViewClickListener ) : RecyclerView.Adapter<HistoryAdapter.RVViewHolder>() {
-
-//    private var onItemClickCallback = RecyclerViewClickListener
-//        private val onItemClickCallback : RecyclerViewClickListener? = null
-    private val history = ArrayList<History>()
-//    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-//        this.onItemClickCallback = onItemClickCallback
+//class HistoryAdapter(private val onItemClickCallback : RecyclerViewClickListener ) : RecyclerView.Adapter<HistoryAdapter.RVViewHolder>() {
+//
+//    private val history = ArrayList<History>()
+//
+//    inner class RVViewHolder(private val binding: ListHistoryBinding) : RecyclerView.ViewHolder(binding.root){
+//        fun bind(history: History) {
+//            binding.textHistoryTitle.text = history.name_history
+//            binding.textHistoryDiagResult.text = history.result_history
+//            binding.textHistoryDate.text = history.date_history
+//            Glide.with(itemView.context)
+//                .load(history.image_history)
+//                .apply(RequestOptions().override(50, 50))
+//                .into(binding.imgHistoryPng)
+//            itemView.setOnClickListener { onItemClickCallback?.onItemClicked(history) }
+//        }
 //    }
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVViewHolder =
+//        RVViewHolder(ListHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+//
+//    override fun onBindViewHolder(holder: RVViewHolder, position: Int) = holder.bind(history[position])
+//
+//    override fun getItemCount(): Int = history.size
+//
+//    fun setRVDataList(items: List<History>) {
+//        history.clear()
+//        history.addAll(items)
+//    }
+//}
+
+class HistoryAdapter(private val onItemClickCallback: RecyclerViewClickListener) : RecyclerView.Adapter<HistoryAdapter.RVViewHolder>() {
+
+    private var querySnapshot: QuerySnapshot? = null
+    private var historyList: List<HistoryDb> = emptyList()
+
 
     inner class RVViewHolder(private val binding: ListHistoryBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(history: History) {
-            binding.textHistoryTitle.text = history.name_history
-            binding.textHistoryDiagResult.text = history.result_history
-            binding.textHistoryDate.text = history.date_history
+        fun bind(history: HistoryDb) {
+            binding.textHistoryTitle.text = history.name
+            binding.textHistoryDiagResult.text = history.actual_result
+            binding.textHistoryDate.text = history.timeStamp
             Glide.with(itemView.context)
-                .load(history.image_history)
+                .load(history.img)
                 .apply(RequestOptions().override(50, 50))
                 .into(binding.imgHistoryPng)
-            itemView.setOnClickListener { onItemClickCallback?.onItemClicked(history) }
+            itemView.setOnClickListener { onItemClickCallback.onItemClicked(history) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVViewHolder =
         RVViewHolder(ListHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: RVViewHolder, position: Int) = holder.bind(history[position])
-
-    override fun getItemCount(): Int = history.size
-
-//    interface OnItemClickCallback {
-//        fun onItemClicked(history : History)
+//    override fun onBindViewHolder(holder: RVViewHolder, position: Int) {
+//        querySnapshot?.let { holder.bind(it.documents[position]) }
 //    }
 
-    fun setRVDataList(items: List<History>) {
-        history.clear()
-        history.addAll(items)
+    override fun onBindViewHolder(holder: RVViewHolder, position: Int) {
+        holder.bind(historyList[position])
+    }
+
+//    override fun getItemCount(): Int = querySnapshot?.size() ?: 0
+
+    override fun getItemCount(): Int = historyList.size
+
+//    fun setRVDataList(querySnapshot: QuerySnapshot) {
+//        this.querySnapshot = querySnapshot
 //        notifyDataSetChanged()
+//    }
+
+    fun setRVDataList(historyList: List<HistoryDb>) {
+        this.historyList = historyList
+        notifyDataSetChanged()
     }
 }
-
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-//        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.list_history, parent, false)
-//        return ListViewHolder(view)
-//    }
-
-//    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-//        val (name, result, date, photo) = history[position]
-//        holder.imgPhoto.setImageResource(photo)
-//        holder.nameHistory.text = name
-//        holder.resultHistory.text = result
-//        holder.dateHistory.text = date
-//        //event onClick
-//        holder.itemView.setOnClickListener{
-//            onItemClickCallback?.onItemClicked(history[position])
-//        }
-////            listener?.onItemClicked(History(position))
-//
-//    }
-
-//    class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        var imgPhoto: ImageView = itemView.findViewById(R.id.img_history_png)
-//        var nameHistory: TextView = itemView.findViewById(R.id.text_history_title)
-//        var resultHistory: TextView = itemView.findViewById(R.id.text_history_diagResult)
-//        var dateHistory: TextView = itemView.findViewById(R.id.text_history_date)
-//
-//    }

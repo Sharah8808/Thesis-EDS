@@ -7,9 +7,12 @@ import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.Query
 import com.thesis.eds.data.model.DiseaseList
 import com.thesis.eds.data.model.History
+import com.thesis.eds.data.model.HistoryDb
 import com.thesis.eds.data.model.User
+import com.thesis.eds.data.repository.HistoryRepository
 import com.thesis.eds.data.repository.UserRepository
 import com.thesis.eds.utils.Dummy
 import java.text.SimpleDateFormat
@@ -25,6 +28,10 @@ class HomeViewModel : ViewModel() {
     private var _dateTime = MutableLiveData<String>()
     val dateTime: LiveData<String>
         get() = _dateTime
+
+    private val _historyList = MutableLiveData<List<HistoryDb>>()
+    val historyList: LiveData<List<HistoryDb>> = _historyList
+    private val historyRepository = HistoryRepository()
 
     private val MORNING_START_HOUR = 5
     private val AFTERNOON_START_HOUR = 12
@@ -63,7 +70,28 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getHistoryList():List<History> = Dummy.getDummyHistory()
+
+    fun getHistoryList() {
+        val currentUser = historyRepository.getCurrentUser()
+        val query = historyRepository.getHistoriesCollection()
+            .whereEqualTo("userId", currentUser.uid)
+            .orderBy("timeStamp", Query.Direction.DESCENDING)
+
+        query.addSnapshotListener { value, error ->
+            if (error != null) {
+                // Handle error
+                return@addSnapshotListener
+            }
+            val historyList = mutableListOf<HistoryDb>()
+            value?.forEach { documentSnapshot ->
+                val history = documentSnapshot.toObject(HistoryDb::class.java)
+                historyList.add(history)
+            }
+            _historyList.value = historyList
+        }
+    }
+
+//    fun getHistoryList():List<History> = Dummy.getDummyHistory()
 
 fun getDiseaseList(): List<DiseaseList> = Dummy.getDummyDiseaseList()
 

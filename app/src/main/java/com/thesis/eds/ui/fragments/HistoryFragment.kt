@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,17 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thesis.eds.R
 import com.thesis.eds.adapters.HistoryAdapter
 import com.thesis.eds.data.model.History
+import com.thesis.eds.data.model.HistoryDb
+import com.thesis.eds.data.repository.HistoryRepository
 import com.thesis.eds.databinding.FragmentHistoryBinding
 import com.thesis.eds.ui.viewModels.HistoryViewModel
 import com.thesis.eds.interfaces.ActionBarTitleSetter
 import com.thesis.eds.interfaces.MenuItemHighlighter
 import com.thesis.eds.interfaces.RecyclerViewClickListener
+import com.thesis.eds.ui.modelFactories.HistoryViewModelFactory
 
 class HistoryFragment : Fragment(), RecyclerViewClickListener {
 
     private val binding get() = _binding!!
     private var _binding: FragmentHistoryBinding? = null
     private lateinit var viewModel : HistoryViewModel
+    private lateinit var adapter: HistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,24 +38,44 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[HistoryViewModel::class.java]
-        val historyEntity = viewModel.getHistoryList()
+        adapter = HistoryAdapter(this)
 
-         val rvHistoryAdapter = HistoryAdapter(this@HistoryFragment)
-        rvHistoryAdapter.setRVDataList(historyEntity)
+        binding.recyclerviewHistory.adapter = adapter
+        binding.recyclerviewHistory.layoutManager = LinearLayoutManager(requireContext())
 
-        with(binding.recyclerviewHistory) {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = rvHistoryAdapter
+        viewModel = ViewModelProvider(this,
+            HistoryViewModelFactory(HistoryRepository()))[HistoryViewModel::class.java]
+
+        viewModel.historyList.observe(viewLifecycleOwner) { historyList ->
+            adapter.setRVDataList(historyList)
         }
 
+        viewModel.getHistoryList()
+
+        initSearchView()
+
+    }
+
+    private fun initSearchView() {
+        binding.searchviewHistory.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val filteredList = viewModel.searchHistoryByName(newText.orEmpty())
+                adapter.setRVDataList(filteredList)
+                return true
+            }
+        })
     }
 
     override fun onDestroyView() {
@@ -65,12 +90,14 @@ class HistoryFragment : Fragment(), RecyclerViewClickListener {
         (activity as MenuItemHighlighter).setMenuHighlight(2)
     }
 
-    override fun onItemClicked(historyEntity: History) {
+    override fun onItemClicked(historyEntity: HistoryDb) {
         Toast.makeText(requireActivity(), "test pindah ke detailleee", Toast.LENGTH_SHORT).show()
 
-        val hisId = historyEntity.id_history
-        val action = HistoryFragmentDirections.actionNavHistoryToNavDiagDetail(hisId!!)
-        findNavController().navigate(action )
+        //go to the DiagnosticDetailFragment with the selected history by user
+        val userId = historyEntity.timeStamp
+        val action = HistoryFragmentDirections.actionNavHistoryToNavDiagDetail(userId)
+        findNavController().navigate(action)
 
     }
+
 }

@@ -5,7 +5,10 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.thesis.eds.data.model.HistoryDb
@@ -25,6 +28,26 @@ class HistoryRepository {
     
     fun updateHistoryData(historyId: String, historyData: Map<String, String?>): Task<Void> {
         return historiesCollection.document(historyId).update(historyData)
+    }
+
+//    fun getHistoriesCollection(): CollectionReference {
+//        val currentUser = getCurrentUser()
+//        return firestore.collection("histories").whereEqualTo("userId", currentUser.uid)
+//    }
+
+    fun getHistoriesCollection(): Query {
+        val currentUser = getCurrentUser()
+        return historiesCollection.whereEqualTo("userId", currentUser.uid)
+    }
+
+    fun getHistoriess(): Task<QuerySnapshot> {
+        val currentUser = getCurrentUser()
+        val historiesCollection = firestore.collection("histories")
+        return historiesCollection.whereEqualTo("userId", currentUser.uid).get()
+    }
+
+    fun deleteHistoryData(documentId: String): Task<Void> {
+        return historiesCollection.document(documentId).delete()
     }
 
     fun addHistory(history: HistoryDb) : Task<Void> {

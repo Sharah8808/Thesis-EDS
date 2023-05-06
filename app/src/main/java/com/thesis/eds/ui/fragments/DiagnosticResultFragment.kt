@@ -96,7 +96,10 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 Log.d(ContentValues.TAG, " 11ini back pressed fri onCreat kepanggil ga sih               ----------------------------------------------")
-                    showExitAlertDialog()
+//                    showExitAlertDialog()
+                DialogUtils.showExitAlertDialog(requireContext()){
+                    findNavController().navigateUp()
+                }
 //                if (showExitAlertDialog()){
 //                    Log.d(ContentValues.TAG, " 22 ini back pressed fri onCreat kepanggil ga sih               ----------------------------------------------")
 //
@@ -264,14 +267,14 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 //            showExitAlertDialog()
 //        }
 
-        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-        if (findNavController().currentDestination?.id == R.id.diagnosticResultFragment) {
-            toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
-            toolbar?.setNavigationOnClickListener() {
-//                Log.d(ContentValues.TAG, "Is the toolbar clicklistener called?????? ================================== and the toolbar = $toolbar | and context ${requireContext()}")
-                showExitAlertDialog()
-            }
-        }
+//        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+//        if (findNavController().currentDestination?.id == R.id.diagnosticResultFragment) {
+//            toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
+//            toolbar?.setNavigationOnClickListener() {
+////                Log.d(ContentValues.TAG, "Is the toolbar clicklistener called?????? ================================== and the toolbar = $toolbar | and context ${requireContext()}")
+//                showExitAlertDialog()
+//            }
+//        }
     }
 
     private fun showExitAlertDialog(){

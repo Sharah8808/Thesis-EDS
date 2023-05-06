@@ -71,8 +71,8 @@
         android:label="fragment_diagnostic_detail"
         tools:layout="@layout/fragment_diagnostic_detail" >
         <argument
-            android:name="historyId"
-            app:argType="integer" />
+            android:name="historyTimeStamp"
+            app:argType="string" />
     </fragment>
 
     <activity

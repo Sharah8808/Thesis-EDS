@@ -122,6 +122,11 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
                     }
 //                    navController.navigateUp()
                     return true
+                } else if (navController.currentDestination?.id == R.id.editProfileFragment){
+                    DialogUtils.showExitAlertDialog(this){
+                        navController.navigateUp()
+                    }
+                    return true
                 }
             }
         }

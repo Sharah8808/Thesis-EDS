@@ -6,10 +6,10 @@
     <item>
         <shape>
             <corners
-                android:radius="20dp"
+                android:radius="10dp"
                 />
             <solid
-                android:color="@color/purple_200"
+                android:color="@color/blue_base"
                 />
 
         </shape>
