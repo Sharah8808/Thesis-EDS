@@ -16,7 +16,6 @@ class SettingViewModel : ViewModel() {
 
     fun loadUserData() {
         val currentUser = userRepository.getCurrentUser()
-
         userRepository.getUserData(currentUser.uid)
             .addOnSuccessListener { document ->
                 if (document.exists()) {
@@ -28,5 +27,4 @@ class SettingViewModel : ViewModel() {
                 Log.d(ContentValues.TAG, "Error getting user data: ", e)
             }
     }
-
 }

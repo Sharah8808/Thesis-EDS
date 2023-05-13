@@ -19,19 +19,15 @@ import com.google.firebase.Timestamp
 
 
 class DiagnosticResultViewModel: ViewModel() {
-
     private val historyRepository = HistoryRepository()
     private val _history = MutableLiveData<HistoryDb?>()
     val history: MutableLiveData<HistoryDb?>
         get() = _history
 
-//    var imageUrl : String? = null
-
     fun createNewHistory(predictRes : String, actualRes: String, imgUri : Uri){
         uploadImageToFirebaseStorage(imgUri, actualRes) { imageUrl ->
             val currentTimeStamp = getCurrentTimestamp()
             val currentUserId = historyRepository.getCurrentUser().uid
-
             val history = HistoryDb(
                 "Diagnose result ${getTimestampForTitle()}",
                 currentTimeStamp,
@@ -53,43 +49,8 @@ class DiagnosticResultViewModel: ViewModel() {
                         Log.d(TAG, "Error adding new history document. : ", e)
                     }
             }
-            // ... rest of the code to save the new history object
         }
-//
-//        uploadImageToFirebaseStorage(imgUri,actualRes) { imageUrl ->
-//
-//        }
-//        val history = HistoryDb(
-//            currentTimeStamp,
-//            currentUserId,
-//            predictRes,
-//            actualRes,
-//            uriString
-//        )
-//        history.title = "Diagnose result ${getTimestampForTitle()}"
-
-
     }
-
-//    private fun uploadImageToFirebaseStorage(imageUri: Uri, actualName: String){
-//        val uid = FirebaseAuth.getInstance().currentUser?.uid
-//        val fileNameDate = getTimestampForTitle()
-//        val storageRef = FirebaseStorage.getInstance().reference.child("result images/$uid/$actualName - $fileNameDate.jpg")
-//        val uploadTask = storageRef.putFile(imageUri).continueWithTask { task ->
-//            if (!task.isSuccessful) {
-//                task.exception?.let { throw it }
-//            }
-//            storageRef.downloadUrl
-//        }.addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                imageUrl = task.result.toString()
-//                Log.d(TAG, "Masa null imageUrl dari uplodtofirebasestorage ????????? = $imageUrl ===================================================================")
-//            } else {
-//                Log.d(TAG, "DiagResultViewModel = error uploading pict.")
-//            }
-//        }
-//
-//    }
 
     private fun uploadImageToFirebaseStorage(imageUri: Uri, actualName: String, callback: (String) -> Unit){
         val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -103,7 +64,6 @@ class DiagnosticResultViewModel: ViewModel() {
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val imageUrl = task.result.toString()
-                Log.d(TAG, "Masa null imageUrl dari uplodtofirebasestorage ????????? = $imageUrl ===================================================================")
                 callback(imageUrl)
             } else {
                 Log.d(TAG, "DiagResultViewModel = error uploading pict.")

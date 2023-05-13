@@ -7,7 +7,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpViewModel(private val firebaseAuth: FirebaseAuth, private val firestore: FirebaseFirestore) : ViewModel() {
-
     private val _signupSuccess = MutableLiveData<Boolean>()
     val signupSuccess: LiveData<Boolean>
         get() = _signupSuccess

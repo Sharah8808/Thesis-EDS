@@ -22,28 +22,13 @@ class HistoryRepository {
         return FirebaseAuth.getInstance().currentUser!!
     }
 
-    fun getHistoryData(historyId: String): Task<DocumentSnapshot> {
-        return historiesCollection.document(historyId).get()
-    }
-    
     fun updateHistoryData(historyId: String, historyData: Map<String, String?>): Task<Void> {
         return historiesCollection.document(historyId).update(historyData)
     }
 
-//    fun getHistoriesCollection(): CollectionReference {
-//        val currentUser = getCurrentUser()
-//        return firestore.collection("histories").whereEqualTo("userId", currentUser.uid)
-//    }
-
     fun getHistoriesCollection(): Query {
         val currentUser = getCurrentUser()
         return historiesCollection.whereEqualTo("userId", currentUser.uid)
-    }
-
-    fun getHistoriess(): Task<QuerySnapshot> {
-        val currentUser = getCurrentUser()
-        val historiesCollection = firestore.collection("histories")
-        return historiesCollection.whereEqualTo("userId", currentUser.uid).get()
     }
 
     fun deleteHistoryData(documentId: String): Task<Void> {

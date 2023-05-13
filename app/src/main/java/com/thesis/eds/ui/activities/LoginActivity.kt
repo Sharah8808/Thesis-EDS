@@ -16,17 +16,13 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val firebaseAuth = FirebaseAuth.getInstance()
-
         val firebaseAuth = FirebaseAuth.getInstance()
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(firebaseAuth))[LoginViewModel::class.java]
-
-//        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(this,
+            LoginViewModelFactory(firebaseAuth))[LoginViewModel::class.java]
 
         binding.signUpBottom.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -56,7 +52,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
         val firebaseAuth = FirebaseAuth.getInstance()
         if (firebaseAuth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)

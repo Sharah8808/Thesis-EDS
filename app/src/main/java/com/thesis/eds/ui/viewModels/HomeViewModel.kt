@@ -70,7 +70,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-
     fun getHistoryList() {
         val currentUser = historyRepository.getCurrentUser()
         val query = historyRepository.getHistoriesCollection()
@@ -91,8 +90,5 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-//    fun getHistoryList():List<History> = Dummy.getDummyHistory()
-
-fun getDiseaseList(): List<DiseaseList> = Dummy.getDummyDiseaseList()
-
+    fun getDiseaseList(): List<DiseaseList> = Dummy.getDummyDiseaseList()
 }

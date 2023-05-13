@@ -26,8 +26,6 @@ class DiagnosticViewModel : ViewModel() {
 
     fun savePhoto(uri: Uri, context : Context, activity : Activity) {
         if (isSavingPhoto) {
-            Log.d(TAG, "eehhh anothe coroutinee???    --------------------------------")
-            // Another coroutine is already running, so do nothing
             return
         }
         isSavingPhoto = true
@@ -57,7 +55,6 @@ class DiagnosticViewModel : ViewModel() {
         }
     }
 
-
     fun getOutputDirectory(activity: Activity): File {
         val mediaDir = activity.externalMediaDirs.firstOrNull()?.let {
             File(it, activity.resources.getString(R.string.app_name)).apply { mkdirs() }
@@ -65,9 +62,5 @@ class DiagnosticViewModel : ViewModel() {
         return if (mediaDir != null && mediaDir.exists())
             mediaDir else activity.filesDir
     }
-
-//    fun getOutputFilePath(): String? {
-//        return outputFile?.absolutePath
-//    }
 }
 
