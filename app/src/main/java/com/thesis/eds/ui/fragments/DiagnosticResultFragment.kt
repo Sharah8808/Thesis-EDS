@@ -11,20 +11,17 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.navigateUp
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentDiagnosticResultBinding
-import com.thesis.eds.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.DiagnosticResultViewModel
 import com.thesis.eds.utils.DialogUtils
 

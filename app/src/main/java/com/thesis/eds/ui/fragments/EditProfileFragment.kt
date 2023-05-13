@@ -25,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.thesis.eds.BuildConfig
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentEditProfileBinding
-import com.thesis.eds.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
 import com.thesis.eds.utils.DialogUtils
 import de.hdodenhof.circleimageview.CircleImageView

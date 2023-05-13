@@ -23,7 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.thesis.eds.R
 import com.thesis.eds.data.model.History
 import com.thesis.eds.databinding.FragmentDiagnosticDetailBinding
-import com.thesis.eds.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.DiagnosticDetailViewModel
 
 class DiagnosticDetailFragment : Fragment() {

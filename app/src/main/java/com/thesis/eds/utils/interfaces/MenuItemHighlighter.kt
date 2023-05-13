@@ -1,4 +1,4 @@
-package com.thesis.eds.interfaces
+package com.thesis.eds.utils.interfaces
 
 interface MenuItemHighlighter {
     fun setMenuHighlight(idIndex : Int?)

@@ -5,12 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
-import com.thesis.eds.data.model.History
 import com.thesis.eds.data.model.HistoryDb
 import com.thesis.eds.databinding.ListHistoryBinding
-import com.thesis.eds.interfaces.RecyclerViewClickListener
+import com.thesis.eds.utils.interfaces.RecyclerViewClickListener
 
 //class HistoryAdapter(private val onItemClickCallback : RecyclerViewClickListener ) : RecyclerView.Adapter<HistoryAdapter.RVViewHolder>() {
 //

@@ -11,17 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.thesis.eds.R
 import com.thesis.eds.adapters.HistoryAdapter
-import com.thesis.eds.data.model.History
 import com.thesis.eds.data.model.HistoryDb
 import com.thesis.eds.data.repository.HistoryRepository
 import com.thesis.eds.databinding.FragmentHistoryBinding
 import com.thesis.eds.ui.viewModels.HistoryViewModel
-import com.thesis.eds.interfaces.ActionBarTitleSetter
-import com.thesis.eds.interfaces.MenuItemHighlighter
-import com.thesis.eds.interfaces.RecyclerViewClickListener
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.MenuItemHighlighter
+import com.thesis.eds.utils.interfaces.RecyclerViewClickListener
 import com.thesis.eds.ui.modelFactories.HistoryViewModelFactory
 
 class HistoryFragment : Fragment(), RecyclerViewClickListener {

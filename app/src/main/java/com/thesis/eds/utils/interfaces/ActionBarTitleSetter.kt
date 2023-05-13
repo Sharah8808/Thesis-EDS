@@ -1,4 +1,4 @@
-package com.thesis.eds.interfaces
+package com.thesis.eds.utils.interfaces
 
 interface ActionBarTitleSetter {
     fun setTitle(title: String?)

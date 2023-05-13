@@ -14,8 +14,8 @@ import com.thesis.eds.adapters.DiseaseListAdapter
 import com.thesis.eds.data.model.DiseaseList
 import com.thesis.eds.databinding.FragmentDiseaseListBinding
 import com.thesis.eds.ui.viewModels.DiseaseListViewModel
-import com.thesis.eds.interfaces.ActionBarTitleSetter
-import com.thesis.eds.interfaces.MenuItemHighlighter
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.MenuItemHighlighter
 
 class DiseaseListFragment : Fragment() {
     private var _binding: FragmentDiseaseListBinding? = null

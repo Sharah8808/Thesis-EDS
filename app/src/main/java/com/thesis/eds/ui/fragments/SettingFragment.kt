@@ -10,16 +10,13 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentSettingBinding
 import com.thesis.eds.ui.viewModels.SettingViewModel
-import com.thesis.eds.interfaces.ActionBarTitleSetter
-import com.thesis.eds.interfaces.MenuItemHighlighter
-import com.thesis.eds.ui.viewModels.EditProfileViewModel
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 
 class SettingFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentSettingBinding? = null

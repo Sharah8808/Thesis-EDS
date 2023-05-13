@@ -5,25 +5,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.thesis.eds.R
 import com.thesis.eds.databinding.ActivityMainBinding
-import com.thesis.eds.interfaces.ActionBarTitleSetter
-import com.thesis.eds.interfaces.MenuItemHighlighter
-import com.thesis.eds.ui.fragments.DiagnosticResultFragment
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.MenuItemHighlighter
 import com.thesis.eds.utils.DialogUtils
 
 class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighlighter {

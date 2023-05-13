@@ -1,7 +1,5 @@
 package com.thesis.eds.ui.fragments
 
-import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
@@ -11,15 +9,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
@@ -32,17 +26,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import com.thesis.eds.R
-import com.thesis.eds.databinding.FragmentCameraPreviewBinding
 import com.thesis.eds.databinding.FragmentDiagnosticBinding
-import com.thesis.eds.interfaces.ActionBarTitleSetter
-import com.thesis.eds.interfaces.MenuItemHighlighter
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
+import com.thesis.eds.utils.interfaces.MenuItemHighlighter
 import com.thesis.eds.ui.viewModels.DiagnosticViewModel
 import kotlinx.coroutines.launch
 import java.io.File
