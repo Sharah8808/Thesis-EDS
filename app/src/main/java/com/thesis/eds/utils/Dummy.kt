@@ -167,9 +167,6 @@ object Dummy {
             DiseaseList("Myringitis Bulosa" )
         )
         listDisease.add(
-            DiseaseList("Normal" )
-        )
-        listDisease.add(
             DiseaseList("OE Difusa" )
         )
         listDisease.add(
@@ -196,7 +193,42 @@ object Dummy {
         listDisease.add(
             DiseaseList("OMedK Resolusi" )
         )
+        listDisease.add(
+            DiseaseList("OMedK Tipe Aman" )
+        )
+        listDisease.add(
+            DiseaseList("OMedK Tipe Bahaya" )
+        )
+        listDisease.add(
+            DiseaseList("Otomikosis" )
+        )
+        listDisease.add(
+            DiseaseList("Perforasi Membran Tympani" )
+        )
+        listDisease.add(
+            DiseaseList("Tympanosklerotik" )
+        )
 
         return listDisease
     }
+
+//    fun getDummyDiseaseList(): List<String> {
+//        return listOf(
+//            "Aerotitis Barotrauma",
+//            "Ceruman",
+//            "Corpus Alienum",
+//            "M Timpani Normal",
+//            "Myringitis Bulosa",
+//            "Normal",
+//            "OE Difusa",
+//            "OE Furunkulosa",
+//            "OMA Hiperemis",
+//            "OMA Oklusi Tuba",
+//            "OMA Perforasi",
+//            "OMA Resolusi",
+//            "OMA Supurasi",
+//            "OMed Efusi",
+//            "OMedK Resolusi"
+//        )
+//    }
 }

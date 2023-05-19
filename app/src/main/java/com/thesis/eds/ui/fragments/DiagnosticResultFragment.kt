@@ -3,8 +3,11 @@ package com.thesis.eds.ui.fragments
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.*
 import android.widget.Button
@@ -21,10 +24,23 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentDiagnosticResultBinding
-import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
+import com.thesis.eds.ml.EarDiseaseModel
 import com.thesis.eds.ui.viewModels.DiagnosticResultViewModel
 import com.thesis.eds.utils.DialogUtils
-
+import com.thesis.eds.utils.Dummy
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
+import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.common.ops.NormalizeOp
+import org.tensorflow.lite.support.image.ImageProcessor
+import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import org.tensorflow.lite.task.vision.classifier.Classifications
+import org.tensorflow.lite.task.vision.detector.Detection
+import org.tensorflow.lite.task.vision.detector.ObjectDetector
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
@@ -34,14 +50,10 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
     private val args : DiagnosticResultFragmentArgs by navArgs()
     private var uri : Uri? = null
     private var finalResult : String? = null
+    private var modelPredictResult : String? = null
     private var onBackPressedCallback: OnBackPressedCallback? = null
 
     private var unsavedChanges = false
-//    private val onBackPressedCallback = object : OnBackPressedCallback(true){
-//        override fun handleOnBackPressed() {
-//            showExitAlertDialog()
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,14 +66,23 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        uri = Uri.parse(args.uriArgs)
-
-        showBottomSheetDialog(uri!!)
+//        uri = Uri.parse(args.uriArgs)
+//
+//        showBottomSheetDialog(uri!!)
+//
+//        Glide.with(this)
+//            .load(uri)
+//            .transform(RoundedCorners(20))
+//            .into(binding.imgResult)
+        val argsString = args.uriArgs
+        val bitmap = stringToBitmap(argsString)
 
         Glide.with(this)
-            .load(uri)
+            .load(bitmap)
             .transform(RoundedCorners(20))
             .into(binding.imgResult)
+
+        bitmap?.let { showBottomSheetDialog(it) }
 
         val noButton : Button = view.findViewById(binding.buttonNo.id)
         val yesButton : Button = view.findViewById(binding.buttonYes.id)
@@ -72,64 +93,21 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         beforeActionVisibility()
 
         unsavedChanges = true
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        // Set up the back button callback
-//        onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-//            showExitAlertDialog(requireContext())
-//        }
-        // This will ensure that the callback is only enabled when the fragment is at the top of the back stack
-//        onBackPressedCallback?.isEnabled = true
-
-//        onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-//
-//            Log.d(ContentValues.TAG, "Is the toolbar clicklistener calledd??????  on the createvieeww ================================== and the toolbar = ${requireContext()}")
-//            showExitAlertDialog()
-//        }.apply {
-//            isEnabled = true
-//        }
+//        bitmap?.let { mlTryHard(it) }
+        modelPredictResult = bitmap?.let { mlModelOperationsSecond(it) }
+        binding.txtPredict.text = modelPredictResult
 
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 Log.d(ContentValues.TAG, " 11ini back pressed fri onCreat kepanggil ga sih               ----------------------------------------------")
-//                    showExitAlertDialog()
                 DialogUtils.showExitAlertDialog(requireContext()){
                     findNavController().navigateUp()
                 }
-//                if (showExitAlertDialog()){
-//                    Log.d(ContentValues.TAG, " 22 ini back pressed fri onCreat kepanggil ga sih               ----------------------------------------------")
-//
-////                    requireActivity().onBackPressed()
-//                    findNavController().navigateUp()
-//
-//                }
-
-//                if (unsavedChanges) {
-//                    // Show warning to user
-//                    // ...
-//                    showExitAlertDialog()
-//                } else {
-//                    isEnabled = false
-//                    requireActivity().onBackPressed()
-//                }
             }
         }.apply { isEnabled = true }
         )
-
-
-
-//        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-//        toolbar.setNavigationOnClickListener{
-//            Log.d(ContentValues.TAG, " that shit is bussin bussin fr fr my lord these fires are enuiqiovantly fuckin bussin               ----------------------------------------------")
-//            findNavController().navigateUp()
-////            showExitAlertDialog()
-//        }
-//        if (findNavController().navigateUp()){
-//            showExitAlertDialog()
-//        }
-//        backButtonPressed()
-
         Log.d(ContentValues.TAG, " di onviewcreatedcurrent navcont = ${findNavController().currentDestination?.id}          !!!  ---------------------------------------------- r.id diagresult frag? ${R.id.diagnosticResultFragment}")
 
     }
@@ -159,29 +137,13 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
                     findNavController().navigate(action)
                 }
             }
-//            R.id.toolbar -> {
-//                Log.d(ContentValues.TAG, "toolbal ke klik ga seeehhh             !!!  ----------------------------------------------")
-//
-//                showExitAlertDialog()
-//            }
         }
-//        val getSupportFragManager = childFragmentManager
-//        val fragment = getSupportFragManager.findFragmentById(R.id.nav_home)?.childFragmentManager?.fragments?.get(0)
-//        if (fragment is HostFragment) {
-//            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//                binding.drawerLayout.closeDrawer(GravityCompat.START, true)
-//            } else {
-//                binding.drawerLayout.openDrawer(GravityCompat.START, true)
-//            }
-//        } else {
-//            navController.navigateUp()
-//        }
+
     }
 
-
-    private fun showBottomSheetDialog(uri: Uri) {
+    private fun showBottomSheetDialog(bitmap : Bitmap) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        Log.d(ContentValues.TAG, "what is the uri to bottomsheeet ?? = $uri               ----------------------------------------------")
+        Log.d(ContentValues.TAG, "what is the uri to bottomsheeet ?? = $uri  || and bitmaapp == $bitmap             ----------------------------------------------")
         bottomSheetDialog.setCancelable(true)
         bottomSheetDialog.setCanceledOnTouchOutside(false)
         bottomSheetDialog.setContentView(R.layout.fragment_camera_preview)
@@ -202,27 +164,21 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
                 val noButton = it2.findViewById<Button>(R.id.button_no)
 
                 Glide.with(this)
-                    .load(uri)
+                    .load(bitmap)
                     .transform(RoundedCorners(20))
                     .into(resultImg)
 
                 yesButton.setOnClickListener{
-//                    val action = DiagnosticFragmentDirections.actionNavDiagnosticToDiagnosticResultFragment(uri.toString())
-//                    findNavController().navigate(action)
                     bottomSheetDialog.dismiss()
                 }
 
                 noButton.setOnClickListener{
-//                    val action = DiagnosticResultFragmentDirections.actionDiagnosticResultFragmentToNavDiagnostic()
-//                    findNavController().navigate(action)
                     requireActivity().onBackPressed()
                     bottomSheetDialog.dismiss()
                 }
 
                 it2.setOnKeyListener { _, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-//                        val action = DiagnosticResultFragmentDirections.actionDiagnosticResultFragmentToNavDiagnostic()
-//                        findNavController().navigate(action)
                         requireActivity().onBackPressed()
                         bottomSheetDialog.dismiss()
                         true
@@ -256,77 +212,239 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-    private fun backButtonPressed(){
-//        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-//        toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
-//        toolbar?.setNavigationOnClickListener() {
-//            Log.d(ContentValues.TAG, "Is the toolbar clicklistener calledd?????? ================================== and the toolbar = $toolbar | and context ${requireContext()}")
-//            showExitAlertDialog()
+//    private fun mlModelOperations() : String? {
+//
+//        // Assume `uri` is the Uri object of the image
+//        val inputStream = uri?.let { context?.contentResolver?.openInputStream(it) }
+//        val bytes = ByteArrayOutputStream()
+//        inputStream?.copyTo(bytes)
+//
+//        val bufferSize = 1 * 256 * 256 * 3 * 4
+//        val buffer = ByteBuffer.allocateDirect(bufferSize)
+//        buffer.order(ByteOrder.nativeOrder())
+//
+//        val bufferArray = bytes.toByteArray()
+//        if (bufferArray.size != bufferSize) {
+//            // Handle the error condition
+//            Log.d(ContentValues.TAG, " buffer errorrrr sizeee      bufferArray == ${bufferArray.size} || bufferSize == $bufferSize         -------------------------------------------------")
 //        }
-
-//        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-//        if (findNavController().currentDestination?.id == R.id.diagnosticResultFragment) {
-//            toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
-//            toolbar?.setNavigationOnClickListener() {
-////                Log.d(ContentValues.TAG, "Is the toolbar clicklistener called?????? ================================== and the toolbar = $toolbar | and context ${requireContext()}")
-//                showExitAlertDialog()
+//        buffer.put(bufferArray)
+//        buffer.rewind()
+//
+//        val model = EarDiseaseModel.newInstance(requireContext())
+//
+//        // Creates inputs for reference.
+//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 256, 256, 3), DataType.FLOAT32)
+//        inputFeature0.loadBuffer(buffer)
+//
+//        // Runs model inference and gets result.
+//        val outputs = model.process(inputFeature0)
+//        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+//
+//        // Get the float array from the output tensor buffer
+//        val outputArray = outputFeature0.floatArray
+//        for (i in outputArray.indices) {
+//            Log.d(ContentValues.TAG, "outputArray[$i] = ${outputArray[i]} -------------------------------------------------")
+//        }
+//
+//        // Find index of maximum probability
+//        var maxIndex = 0
+//        var maxValue = outputArray[0]
+//        for (i in 1 until outputArray.size) {
+//            Log.d(ContentValues.TAG, " Current outputarray $i == ${outputArray[i]}   !!  maxvalue == $maxValue         ---------------------------------------------- $i")
+//            if (outputArray[i] > maxValue) {
+//                maxIndex = i
+//                maxValue = outputArray[i]
 //            }
 //        }
-    }
-
-    private fun showExitAlertDialog(){
-//        var isGoBack = true
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        alertDialogBuilder.setTitle("Confirmation")
-        alertDialogBuilder.setMessage("Data akan hilang. Yakin ingin kembali?")
-            .setCancelable(false)
-            .setPositiveButton("Iya") { _, _ ->
-                // Go back to the previous fragment and lose the current picture data
-//                val action = DiagnosticResultFragmentDirections.actionDiagnosticResultFragmentToNavDiagnostic()
-//                findNavController().navigate(action)
-//                moveBackToDiagFrag()
-//                super.requireActivity().onBackPressed()
-//                isGoBack = true
-//                dialog.dismiss()
-                findNavController().navigateUp()
-            }
-            .setNegativeButton("Tidak") { dialog, _ ->
-//                isGoBack = false
-                dialog.dismiss()
-            }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-//        Log.d(ContentValues.TAG, "nilai isBack apaseh $isGoBack ================================== ")
-
-//        return isGoBack
-    }
-
-//    private fun moveBackToDiagFrag(){
-//        val action = DiagnosticResultFragmentDirections.actionDiagnosticResultFragmentToNavDiagnostic()
-//        findNavController().navigate(action)
 //
+//        // Define list of class labels
+//        val classLabels = Dummy.getDummyDiseaseList().map { it.name_disease_list }
+//
+//        // Get predicted class label
+//        val predictedClass = classLabels[maxIndex]
+//
+//
+//        // Releases model resources if no longer used.
+//        model.close()
+//
+//        return predictedClass
 //    }
 
-//    @Deprecated("Deprecated in Java")
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            android.R.id.home -> {
-//                val navController = findNavController()
-//                Log.d(ContentValues.TAG, "current navcont = ${navController.currentDestination?.id}          !!!  ---------------------------------------------- r.id diagresult frag? ${R.id.diagnosticResultFragment}")
-//                if (navController.currentDestination?.id == R.id.diagnosticResultFragment) {
-//                    DialogUtils.showExitAlertDialog(requireContext()) {
-//                        Log.d(ContentValues.TAG, "dialog upil di kepanggil ga sihh             !!!  ----------------------------------------------")
+    private fun mlModelOperationsSecond(bitmap: Bitmap): String? {
+        val model = EarDiseaseModel.newInstance(requireContext())
+        // Convert the input bitmap to a TensorImage
+        val inputTensorImage = bitmapToTensorBuffer(bitmap)
+
+        // Perform the machine learning operations using the inputTensorImage
+        val results = model.process(inputTensorImage)
+        val outputFeature0 = results.outputFeature0AsTensorBuffer
+
+        // Get the float array from the output tensor buffer
+        val outputArray = outputFeature0.floatArray
+        for (i in outputArray.indices) {
+            Log.d(ContentValues.TAG, "outputArray[$i] = ${outputArray[i]} -------------------------------------------------")
+        }
+
+        // Find index of maximum probability
+        var maxIndex = 0
+        var maxValue = outputArray[0]
+        for (i in 1 until outputArray.size) {
+            Log.d(ContentValues.TAG, " Current outputarray $i == ${outputArray[i]}   !!  maxvalue == $maxValue         ---------------------------------------------- $i")
+            if (outputArray[i] > maxValue) {
+                maxIndex = i
+                maxValue = outputArray[i]
+            }
+        }
+
+        // Define list of class labels
+        val classLabels = Dummy.getDummyDiseaseList().map { it.name_disease_list }
+
+        // Get predicted class label
+        val predictedClass = classLabels[maxIndex]
+
+
+        // Releases model resources if no longer used.
+        model.close()
+
+        return predictedClass
+    }
+
+    private fun bitmapToTensorBuffer(bitmap: Bitmap): TensorBuffer {
+        // Resize the bitmap to match the model's input size (256x256)
+        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true)
+
+        // Create a TensorImage object from the resized bitmap
+        val tensorImage = TensorImage.fromBitmap(resizedBitmap)
+
+        // Create a TensorBuffer with the same shape as the model's input tensor
+        val tensorBuffer = TensorBuffer.createFixedSize(intArrayOf(1, 256, 256, 3), DataType.FLOAT32)
+
+        // Normalize the pixel values of the tensor image
+        val imageProcessor = ImageProcessor.Builder()
+            .add(ResizeOp(256, 256, ResizeOp.ResizeMethod.BILINEAR))
+            .add(NormalizeOp(0f, 255f))
+            .build()
+
+        val preprocessedImage = imageProcessor.process(tensorImage)
+        val preprocessedBuffer = preprocessedImage.buffer
+        val tensorBufferBuffer = tensorBuffer.buffer
+
+        preprocessedBuffer.rewind()
+        preprocessedBuffer.limit(tensorBufferBuffer.capacity())
+        tensorBufferBuffer.rewind()
+        tensorBufferBuffer.put(preprocessedBuffer)
+
+        return tensorBuffer
+    }
+
+//    private fun mlModelOperations(bitmap: Bitmap): String? {
+//        // Convert the Bitmap to a ByteBuffer
+//        val byteBuffer = convertBitmapToByteBuffer(bitmap)
 //
-//                        // Go back to the previous fragment and lose the current picture data
-//                        findNavController().navigateUp()
-//                    }
-//                    return true
-//                }
+//        // Perform your machine learning operations using the byteBuffer
+//
+//        // Return the result or null
+//        return null
+//    }
+
+//    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
+//        val byteBuffer = ByteBuffer.allocateDirect(BATCH_SIZE * IMAGE_SIZE * IMAGE_SIZE * CHANNELS)
+//        byteBuffer.order(ByteOrder.nativeOrder())
+//
+//        // Scale the input Bitmap to the desired image size
+//        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, IMAGE_SIZE, IMAGE_SIZE, true)
+//
+//        // Convert the scaledBitmap to grayscale and normalize pixel values
+//        val grayscaleBitmap = convertToGrayscale(scaledBitmap)
+//        val normalizedBitmap = normalizeBitmap(grayscaleBitmap)
+//
+//        // Convert the normalizedBitmap to ByteBuffer
+//        val intValues = IntArray(IMAGE_SIZE * IMAGE_SIZE)
+//        normalizedBitmap.getPixels(intValues, 0, IMAGE_SIZE, 0, 0, IMAGE_SIZE, IMAGE_SIZE)
+//
+//        for (pixelValue in intValues) {
+//            val normalizedPixelValue = (pixelValue shr 16 and 0xFF) / 255.0f
+//            byteBuffer.putFloat(normalizedPixelValue)
+//        }
+//
+//        return byteBuffer
+//    }
+//
+//    private fun convertToGrayscale(bitmap: Bitmap): Bitmap {
+//        val grayscaleBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+//        val canvas = Canvas(grayscaleBitmap)
+//        val paint = Paint().apply {
+//            colorMatrix = ColorMatrix().apply {
+//                setSaturation(0f)
 //            }
 //        }
-//        return super.onOptionsItemSelected(item)
+//        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+//        return grayscaleBitmap
 //    }
+//
+//    private fun normalizeBitmap(bitmap: Bitmap): Bitmap {
+//        val normalizedBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+//        val minPixelValue = 0f
+//        val maxPixelValue = 255f
+//        val delta = maxPixelValue - minPixelValue
+//
+//        for (y in 0 until bitmap.height) {
+//            for (x in 0 until bitmap.width) {
+//                val pixelValue = bitmap.getPixel(x, y)
+//                val normalizedPixelValue = (Color.red(pixelValue) - minPixelValue) / delta
+//                val normalizedColor = Color.rgb(
+//                    (normalizedPixelValue * 255).toInt(),
+//                    (normalizedPixelValue * 255).toInt(),
+//                    (normalizedPixelValue * 255).toInt()
+//                )
+//                normalizedBitmap.setPixel(x, y, normalizedColor)
+//            }
+//        }
+//
+//        return normalizedBitmap
+//    }
+
+
+
+//    private fun mlTryHard(bitmap : Bitmap){
+//        // Step 1: create TFLite's TensorImage object
+//        val image = TensorImage.fromBitmap(bitmap)
+//
+//        // Step 2: Initialize the detector object
+//        val options = ObjectDetector.ObjectDetectorOptions.builder()
+//            .setMaxResults(5)
+//            .setScoreThreshold(0.5f)
+//            .build()
+//        val detector = ObjectDetector.createFromFileAndOptions(
+//            requireContext(), // the application context
+//            "EarDiseaseModel.tflite", // must be same as the filename in assets folder
+//            options
+//        )
+//
+//        // Step 3: feed given image to the model and print the detection result
+//        val results = detector.detect(image)
+//
+//        // Step 4: Parse the detection result and show it
+//        debugPrint(results)
+//    }
+//
+//    private fun debugPrint(results : List<Detection>) {
+//        for ((i, obj) in results.withIndex()) {
+//            val box = obj.boundingBox
+//
+//            Log.d(TAG, "Detected object: ${i} ")
+//            Log.d(TAG, "  boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
+//
+//            for ((j, category) in obj.categories.withIndex()) {
+//                Log.d(TAG, "    Label $j: ${category.label}")
+//                val confidence: Int = category.score.times(100).toInt()
+//                Log.d(TAG, "    Confidence: ${confidence}%")
+//            }
+//        }
+//    }
+
+
 
     private fun beforeActionVisibility(){
         binding.buttonSave.isClickable = false
@@ -347,15 +465,11 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         binding.txtPredict.text = result
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//
-//        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-//            showExitAlertDialog(requireContext())
-//        }
-//        // This will ensure that the callback is only enabled when the fragment is at the top of the back stack
-//        callback.isEnabled = true
-//    }
+    fun stringToBitmap(encodedString: String): Bitmap? {
+        val decodedBytes = Base64.decode(encodedString, Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -364,13 +478,7 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-//        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-//        if (findNavController().currentDestination?.id == R.id.diagnosticResultFragment) {
-//            toolbar.navigationIcon = null
-//            toolbar.setNavigationOnClickListener(null)
-//        }
         _binding = null
     }
-
 
 }

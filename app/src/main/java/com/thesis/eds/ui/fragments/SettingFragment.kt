@@ -1,5 +1,6 @@
 package com.thesis.eds.ui.fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -50,9 +51,13 @@ class SettingFragment : Fragment(), View.OnClickListener {
 
         val logout : TextView = view.findViewById(binding.textLogout.id)
         val editProfile : Button = view.findViewById(binding.buttonEditProfile.id)
+        val textUpdate : TextView = view.findViewById(binding.descUpdate.id)
+        val textAbout : TextView = view.findViewById(binding.descAbout.id)
 
         logout.setOnClickListener(this)
         editProfile.setOnClickListener(this)
+        textAbout.setOnClickListener(this)
+        textUpdate.setOnClickListener(this)
 
         showProfileWidgetData()
     }
@@ -81,16 +86,66 @@ class SettingFragment : Fragment(), View.OnClickListener {
         Toast.makeText(requireActivity(), "is setting oncliked cliked??", Toast.LENGTH_SHORT).show()
         when(v?.id){
             binding.textLogout.id -> {
-                firebaseAuth.signOut()
-                val action = SettingFragmentDirections.actionNavSettingToLoginActivity()
-                findNavController().navigate(action)
+                showLogoutAlertDialog()
+//                firebaseAuth.signOut()
+//                val action = SettingFragmentDirections.actionNavSettingToLoginActivity()
+//                findNavController().navigate(action)
             }
             binding.buttonEditProfile.id -> {
                 Toast.makeText(requireActivity(), "is button edit profile cliked???", Toast.LENGTH_SHORT).show()
                 val action = SettingFragmentDirections.actionNavSettingToEditProfileFragment()
                 findNavController().navigate(action)
             }
+            binding.descUpdate.id -> {
+                showUpdateAlertDialog()
+            }
+            binding.descAbout.id -> {
+                showAboutAlertDialog()
+            }
         }
+    }
+
+    private fun showUpdateAlertDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Info Update Sistem")
+        builder.setMessage("Sistem masih dalam tahap pengembangan. Tunggu info update sistem selanjutnya.")
+            .setCancelable(false)
+            .setNeutralButton("Ok"){ dialog, _ ->
+                dialog.dismiss()
+            }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    private fun showAboutAlertDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Tentang Aplikasi")
+        builder.setMessage("Aplikasi ini ditujukan untuk mendeteksi penyakit telinga menggunakan kamera endoskopi yang disambungkan ke USB smartphone pengguna.")
+            .setCancelable(false)
+            .setNeutralButton("Ok"){ dialog, _ ->
+                dialog.dismiss()
+            }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    private fun showLogoutAlertDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Logout")
+        builder.setMessage("Yakin ingin keluar dari aplikasi?")
+            .setCancelable(false)
+            .setPositiveButton("Iya"){_, _ ->
+                firebaseAuth.signOut()
+                val action = SettingFragmentDirections.actionNavSettingToLoginActivity()
+                findNavController().navigate(action)
+            }
+            .setNegativeButton("Tidak"){dialog, _ ->
+                dialog.dismiss()
+            }
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 
     override fun onDestroyView() {

@@ -27,10 +27,6 @@ class UserRepository {
         return usersCollection.document(userId).update(userData)
     }
 
-    fun createUser(userId: String, userData: Map<String, Any>): Task<Void> {
-        return usersCollection.document(userId).set(userData)
-    }
-
     fun checkPassword(uid: String, password: String, callback: (Boolean) -> Unit) {
         val docRef = usersCollection.document(uid)
         docRef.get().addOnSuccessListener { documentSnapshot ->

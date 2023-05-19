@@ -1,5 +1,6 @@
 package com.thesis.eds.ui.viewModels
 
+import androidx.lifecycle.Observer
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,32 @@ class LoginViewModelTest {
         viewModel = LoginViewModel(auth)
     }
 
+//    @Test
+//    fun testLoginSuccess() {
+//        val email = "lala@gmail.com"
+//        val password = "loli80"
+//        val mockTask: Task<AuthResult> = mock(Task::class.java) as Task<AuthResult>
+//        `when`(auth.signInWithEmailAndPassword(email, password)).thenReturn(mockTask)
+//        `when`(mockTask.isSuccessful).thenReturn(true)
+//
+//        val loginResult = viewModel.login(email, password)
+//
+//        assertEquals(true, loginResult)
+//    }
+//
+//    @Test
+//    fun testLoginFailure() {
+//        val email = "lala@gmail.com"
+//        val password = "loli80"
+//        val mockTask: Task<AuthResult> = mock(Task::class.java) as Task<AuthResult>
+//        `when`(auth.signInWithEmailAndPassword(email, password)).thenReturn(mockTask)
+//        `when`(mockTask.isSuccessful).thenReturn(false)
+//
+//        val loginResult = viewModel.login(email, password)
+//
+//        assertEquals(false, loginResult)
+//    }
+
     @Test
     fun testLoginSuccess() {
         val email = "lala@gmail.com"
@@ -35,7 +62,19 @@ class LoginViewModelTest {
 
         val loginResult = viewModel.login(email, password)
 
-        assertEquals(true, loginResult)
+        // Create an observer for the loginSuccess LiveData object
+        val observer = Observer<Boolean> { result ->
+            // Verify that the value of loginSuccess is true
+            assertEquals(true, result)
+        }
+        // Attach the observer to the loginSuccess LiveData object
+        loginResult.observeForever(observer)
+
+        // Wait for the observer to receive the value update
+        Thread.sleep(1000)
+
+        // Remove the observer from the loginSuccess LiveData object
+        loginResult.removeObserver(observer)
     }
 
     @Test
@@ -48,8 +87,21 @@ class LoginViewModelTest {
 
         val loginResult = viewModel.login(email, password)
 
-        assertEquals(false, loginResult)
+        // Create an observer for the loginSuccess LiveData object
+        val observer = Observer<Boolean> { result ->
+            // Verify that the value of loginSuccess is false
+            assertEquals(false, result)
+        }
+        // Attach the observer to the loginSuccess LiveData object
+        loginResult.observeForever(observer)
+
+        // Wait for the observer to receive the value update
+        Thread.sleep(1000)
+
+        // Remove the observer from the loginSuccess LiveData object
+        loginResult.removeObserver(observer)
     }
+
 }
 
 
