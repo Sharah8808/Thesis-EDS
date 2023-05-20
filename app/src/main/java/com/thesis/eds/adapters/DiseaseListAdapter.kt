@@ -24,8 +24,6 @@ class DiseaseListAdapter(private val listDisease: ArrayList<DiseaseList>) : Recy
     fun setRVDataList(items: List<DiseaseList>) {
         listDisease.clear()
         listDisease.addAll(items)
-//        notifyDataSetChanged()
     }
-
 
 }

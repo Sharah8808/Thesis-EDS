@@ -1,22 +1,16 @@
 package com.thesis.eds.ui.viewModels
 
-import android.content.ContentValues.TAG
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.thesis.eds.data.model.HistoryDb
-import com.thesis.eds.data.model.User
 import com.thesis.eds.data.repository.HistoryRepository
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime.now
 import java.util.*
-import com.google.firebase.Timestamp
-
 
 class DiagnosticResultViewModel: ViewModel() {
     private val historyRepository = HistoryRepository()
@@ -42,11 +36,11 @@ class DiagnosticResultViewModel: ViewModel() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             // Document successfully written
-                            Log.d(TAG, "New history document added.")
+                            Log.d("EDSThesis_DResultVM", "New history document added.")
                         }
                     }
                     .addOnFailureListener { e ->
-                        Log.d(TAG, "Error adding new history document. : ", e)
+                        Log.d("EDSThesis_DResultVM", "Error adding new history document : ", e)
                     }
             }
         }
@@ -66,7 +60,7 @@ class DiagnosticResultViewModel: ViewModel() {
                 val imageUrl = task.result.toString()
                 callback(imageUrl)
             } else {
-                Log.d(TAG, "DiagResultViewModel = error uploading pict.")
+                Log.d("EDSThesis_DResultVM", "Error uploading picture to Firebase Storage.")
             }
         }
     }

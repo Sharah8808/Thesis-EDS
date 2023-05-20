@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/searchview_history"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/list_history"
+        tools:listitem="@layout/list_history_homepage"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

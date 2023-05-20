@@ -3,13 +3,13 @@ package com.thesis.eds.ui.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -32,21 +32,14 @@ class SettingFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        val settingViewModel =
-//            ViewModelProvider(this)[SettingViewModel::class.java]
-
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-
-        firebaseAuth = FirebaseAuth.getInstance()
-//        val logout = binding.textLogout.setOnClickListener {
-//            firebaseAuth.signOut()
-//        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        firebaseAuth = FirebaseAuth.getInstance()
+
         viewModel.loadUserData()
 
         val logout : TextView = view.findViewById(binding.textLogout.id)
@@ -83,16 +76,12 @@ class SettingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        Toast.makeText(requireActivity(), "is setting oncliked cliked??", Toast.LENGTH_SHORT).show()
         when(v?.id){
             binding.textLogout.id -> {
                 showLogoutAlertDialog()
-//                firebaseAuth.signOut()
-//                val action = SettingFragmentDirections.actionNavSettingToLoginActivity()
-//                findNavController().navigate(action)
             }
             binding.buttonEditProfile.id -> {
-                Toast.makeText(requireActivity(), "is button edit profile cliked???", Toast.LENGTH_SHORT).show()
+                Log.d("EDSThesis_Setting", "Move to edit profile page...")
                 val action = SettingFragmentDirections.actionNavSettingToEditProfileFragment()
                 findNavController().navigate(action)
             }
@@ -154,7 +143,7 @@ class SettingFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onAttach(context: Context) {
-        Toast.makeText(requireActivity(), "is kierooo heerre?", Toast.LENGTH_SHORT).show()
+        Log.d("EDSThesis_Setting", "Currently on Setting Fragment...")
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_pengaturan))
     }

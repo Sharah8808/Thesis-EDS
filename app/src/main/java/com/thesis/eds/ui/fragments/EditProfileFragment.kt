@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -25,10 +24,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.thesis.eds.BuildConfig
 import com.thesis.eds.R
 import com.thesis.eds.databinding.FragmentEditProfileBinding
-import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 import com.thesis.eds.ui.viewModels.EditProfileViewModel
 import com.thesis.eds.utils.DialogUtils
-import de.hdodenhof.circleimageview.CircleImageView
+import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 import java.io.File
 
 class EditProfileFragment : Fragment() {
@@ -36,9 +34,6 @@ class EditProfileFragment : Fragment() {
     private val viewModel by viewModels<EditProfileViewModel>()
     private var _binding : FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
-    private lateinit var selectImageLauncher: ActivityResultLauncher<String>
 
     private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
@@ -56,22 +51,17 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-
     companion object {
         const val REQUEST_IMAGE_CAPTURE = 1
         const val REQUEST_IMAGE_PICK = 2
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
-        //        val toolbar: Toolbar? = root.findViewById(R.id.toolbar)
-//        toolbar?.setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_24)
-//        toolbar?.setNavigationOnClickListener { requireActivity().onBackPressed() }
         return binding.root
     }
 
@@ -79,10 +69,7 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadUserData()
 
-//        showPhotoProfile()
-
         observeDataChanges()
-//        updatePhotoProfile()
 
         clickListenerForTheCircleImage()
         clickListenerForTheSaveButton()
@@ -118,32 +105,6 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-    private fun showPhotoProfile(){
-        val imgView : CircleImageView = binding.imgAvatar
-        val imgUri = viewModel.imageUri
-        Glide.with(this)
-            .load(imgUri)
-            .into(imgView)
-    }
-
-//    private fun updatePhotoProfile(){
-//        // Initialize the ActivityResultLaunchers
-//        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { result ->
-//            if (result) {
-//                // Update the CircleImageView with the taken picture
-//                binding.imgAvatar.setImageURI(viewModel.imageUri)
-//            }
-//        }
-//
-//        selectImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-//            if (uri != null) {
-//                // Update the CircleImageView with the selected image
-//                binding.imgAvatar.setImageURI(uri)
-//                viewModel.imageUri = uri
-//            }
-//        }
-//    }
-
     private fun clickListenerForTheCircleImage(){
         // Set an OnClickListener to the CircleImageView
         binding.imgAvatar.setOnClickListener {
@@ -154,11 +115,9 @@ class EditProfileFragment : Fragment() {
             builder.setItems(options) { dialog, item ->
                 when {
                     options[item] == "Take Photo" -> {
-//                        takePictureLauncher.launch(viewModel.createImageUri(requireContext()))
                         takePictureFromCamera()
                     }
                     options[item] == "Choose from Gallery" -> {
-//                        selectImageLauncher.launch("image/*")
                         choosePictureFromGallery()
                     }
                     options[item] == "Cancel" -> {
@@ -186,19 +145,6 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-
-//    private fun showImagePickerDialog() {
-//        val options = arrayOf("Take Picture", "Choose from Gallery", "Cancel")
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setItems(options) { _, which ->
-//            when (which) {
-//                0 -> takePicture.launch(viewModel.createImageUri(requireContext()))
-//                1 -> choosePicture.launch("image/*")
-//            }
-//        }
-//        builder.show()
-//    }
-
     private fun takePictureFromCamera() {
         if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             val photoFile = createImageFile()
@@ -220,7 +166,6 @@ class EditProfileFragment : Fragment() {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == RESULT_OK) {
             when (requestCode) {
@@ -230,12 +175,6 @@ class EditProfileFragment : Fragment() {
                     }
                 }
                 REQUEST_IMAGE_PICK -> {
-//                    val imageUri = data?.data
-//                    imageUri?.let {
-//                        viewModel.imageUri = it
-//                        binding.imgAvatar.setImageURI(it)
-//                        uploadImageToFirebaseStorage(it)
-//                    }
                     data?.let { choosePicture.launch(it.data.toString()) }
                 }
             }

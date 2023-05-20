@@ -1,6 +1,5 @@
 package com.thesis.eds.ui.viewModels
 
-import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +23,7 @@ class SettingViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener { e ->
-                Log.d(ContentValues.TAG, "Error getting user data: ", e)
+                Log.d("EDSThesis_Setting", "Error getting user data: ", e)
             }
     }
 }

@@ -1,7 +1,6 @@
 package com.thesis.eds.ui.fragments
 
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -29,18 +28,12 @@ import com.thesis.eds.ui.viewModels.DiagnosticResultViewModel
 import com.thesis.eds.utils.DialogUtils
 import com.thesis.eds.utils.Dummy
 import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
-import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
+import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import org.tensorflow.lite.task.vision.classifier.Classifications
-import org.tensorflow.lite.task.vision.detector.Detection
-import org.tensorflow.lite.task.vision.detector.ObjectDetector
-import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
@@ -51,8 +44,6 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
     private var uri : Uri? = null
     private var finalResult : String? = null
     private var modelPredictResult : String? = null
-    private var onBackPressedCallback: OnBackPressedCallback? = null
-
     private var unsavedChanges = false
 
     override fun onCreateView(
@@ -66,16 +57,10 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        uri = Uri.parse(args.uriArgs)
-//
-//        showBottomSheetDialog(uri!!)
-//
-//        Glide.with(this)
-//            .load(uri)
-//            .transform(RoundedCorners(20))
-//            .into(binding.imgResult)
-        val argsString = args.uriArgs
-        val bitmap = stringToBitmap(argsString)
+        val bitmapArgsString = args.bitmapArgs
+        val bitmap = stringToBitmap(bitmapArgsString)
+
+        uri = Uri.parse(args.uriArgs)
 
         Glide.with(this)
             .load(bitmap)
@@ -94,21 +79,18 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
         unsavedChanges = true
 
-//        bitmap?.let { mlTryHard(it) }
         modelPredictResult = bitmap?.let { mlModelOperationsSecond(it) }
         binding.txtPredict.text = modelPredictResult
 
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                Log.d(ContentValues.TAG, " 11ini back pressed fri onCreat kepanggil ga sih               ----------------------------------------------")
+                Log.d("EDSThesis_DResult", "Back to previous page, data will be unsaved.")
                 DialogUtils.showExitAlertDialog(requireContext()){
                     findNavController().navigateUp()
                 }
             }
         }.apply { isEnabled = true }
         )
-        Log.d(ContentValues.TAG, " di onviewcreatedcurrent navcont = ${findNavController().currentDestination?.id}          !!!  ---------------------------------------------- r.id diagresult frag? ${R.id.diagnosticResultFragment}")
 
     }
 
@@ -116,7 +98,6 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         when(v.id){
             binding.buttonNo.id -> {
                 showResultDiagnoseDialog{ actualResult ->
-                    //man, we gotta do something bout this predict variable in the future
                     finalResult = actualResult
                     afterActionVisibility(actualResult)
                     unsavedChanges = false
@@ -130,20 +111,22 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
             }
             binding.buttonSave.id -> {
                 if(binding.buttonSave.isClickable){
-                    val predictResult = binding.txtPredict.text.toString()
-                    viewModel.createNewHistory(predictResult,finalResult!!,uri!!)
+                    val predictResult = modelPredictResult
+                    Log.d("EDSThesis_DResult", "Variables check --> Predict result = $predictResult | Final result = $finalResult || Uri = $uri ----------")
+                    viewModel.createNewHistory(predictResult!!,finalResult!!,uri!!)
 
                     val action = DiagnosticResultFragmentDirections.actionDiagnosticResultFragmentToNavHome()
                     findNavController().navigate(action)
                 }
             }
         }
-
     }
 
     private fun showBottomSheetDialog(bitmap : Bitmap) {
+        Log.d("EDSThesis_DResult", "Showing bottom sheet dialog...")
+        Log.d("EDSThesis_DResult", "Variables check--> Uri = $uri | Bitmap == $bitmap ----------")
+
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        Log.d(ContentValues.TAG, "what is the uri to bottomsheeet ?? = $uri  || and bitmaapp == $bitmap             ----------------------------------------------")
         bottomSheetDialog.setCancelable(true)
         bottomSheetDialog.setCanceledOnTouchOutside(false)
         bottomSheetDialog.setContentView(R.layout.fragment_camera_preview)
@@ -153,8 +136,8 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
         bottomSheetDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         bottomSheetDialog.setOnShowListener {
-            val bottomSheetDialog = it as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val dialogInterface = it as BottomSheetDialog
+            val bottomSheet = dialogInterface.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let { it2 ->
                 val peekHeight = screenHeight - resources.getDimensionPixelSize(R.dimen.bottom_sheet_margin_bottom)
                 BottomSheetBehavior.from(it2).peekHeight = peekHeight
@@ -169,25 +152,24 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
                     .into(resultImg)
 
                 yesButton.setOnClickListener{
-                    bottomSheetDialog.dismiss()
+                    dialogInterface.dismiss()
                 }
 
                 noButton.setOnClickListener{
                     requireActivity().onBackPressed()
-                    bottomSheetDialog.dismiss()
+                    dialogInterface.dismiss()
                 }
 
                 it2.setOnKeyListener { _, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                         requireActivity().onBackPressed()
-                        bottomSheetDialog.dismiss()
+                        dialogInterface.dismiss()
                         true
                     } else {
                         false
                     }
                 }
             }
-
         }
         bottomSheetDialog.show()
     }
@@ -212,65 +194,6 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-//    private fun mlModelOperations() : String? {
-//
-//        // Assume `uri` is the Uri object of the image
-//        val inputStream = uri?.let { context?.contentResolver?.openInputStream(it) }
-//        val bytes = ByteArrayOutputStream()
-//        inputStream?.copyTo(bytes)
-//
-//        val bufferSize = 1 * 256 * 256 * 3 * 4
-//        val buffer = ByteBuffer.allocateDirect(bufferSize)
-//        buffer.order(ByteOrder.nativeOrder())
-//
-//        val bufferArray = bytes.toByteArray()
-//        if (bufferArray.size != bufferSize) {
-//            // Handle the error condition
-//            Log.d(ContentValues.TAG, " buffer errorrrr sizeee      bufferArray == ${bufferArray.size} || bufferSize == $bufferSize         -------------------------------------------------")
-//        }
-//        buffer.put(bufferArray)
-//        buffer.rewind()
-//
-//        val model = EarDiseaseModel.newInstance(requireContext())
-//
-//        // Creates inputs for reference.
-//        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 256, 256, 3), DataType.FLOAT32)
-//        inputFeature0.loadBuffer(buffer)
-//
-//        // Runs model inference and gets result.
-//        val outputs = model.process(inputFeature0)
-//        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
-//
-//        // Get the float array from the output tensor buffer
-//        val outputArray = outputFeature0.floatArray
-//        for (i in outputArray.indices) {
-//            Log.d(ContentValues.TAG, "outputArray[$i] = ${outputArray[i]} -------------------------------------------------")
-//        }
-//
-//        // Find index of maximum probability
-//        var maxIndex = 0
-//        var maxValue = outputArray[0]
-//        for (i in 1 until outputArray.size) {
-//            Log.d(ContentValues.TAG, " Current outputarray $i == ${outputArray[i]}   !!  maxvalue == $maxValue         ---------------------------------------------- $i")
-//            if (outputArray[i] > maxValue) {
-//                maxIndex = i
-//                maxValue = outputArray[i]
-//            }
-//        }
-//
-//        // Define list of class labels
-//        val classLabels = Dummy.getDummyDiseaseList().map { it.name_disease_list }
-//
-//        // Get predicted class label
-//        val predictedClass = classLabels[maxIndex]
-//
-//
-//        // Releases model resources if no longer used.
-//        model.close()
-//
-//        return predictedClass
-//    }
-
     private fun mlModelOperationsSecond(bitmap: Bitmap): String? {
         val model = EarDiseaseModel.newInstance(requireContext())
         // Convert the input bitmap to a TensorImage
@@ -283,17 +206,18 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         // Get the float array from the output tensor buffer
         val outputArray = outputFeature0.floatArray
         for (i in outputArray.indices) {
-            Log.d(ContentValues.TAG, "outputArray[$i] = ${outputArray[i]} -------------------------------------------------")
+            Log.d("EDSThesis_DResult", "Model's outputArray[$i] = ${outputArray[i]} --")
         }
 
         // Find index of maximum probability
-        var maxIndex = 0
-        var maxValue = outputArray[0]
-        for (i in 1 until outputArray.size) {
-            Log.d(ContentValues.TAG, " Current outputarray $i == ${outputArray[i]}   !!  maxvalue == $maxValue         ---------------------------------------------- $i")
-            if (outputArray[i] > maxValue) {
+        var maxIndex = -1
+        var maxConfidence = Float.MIN_VALUE
+        for (i in outputArray.indices) {
+            val confidence = outputArray[i]
+            Log.d("EDSThesis_DResult", "Model's current outputArray $i = ${outputArray[i]} | Max confidence = $maxConfidence | MaxIndex = $maxIndex---")
+            if (confidence >= maxConfidence) {
+                maxConfidence = confidence
                 maxIndex = i
-                maxValue = outputArray[i]
             }
         }
 
@@ -302,7 +226,6 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
         // Get predicted class label
         val predictedClass = classLabels[maxIndex]
-
 
         // Releases model resources if no longer used.
         model.close()
@@ -338,114 +261,6 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         return tensorBuffer
     }
 
-//    private fun mlModelOperations(bitmap: Bitmap): String? {
-//        // Convert the Bitmap to a ByteBuffer
-//        val byteBuffer = convertBitmapToByteBuffer(bitmap)
-//
-//        // Perform your machine learning operations using the byteBuffer
-//
-//        // Return the result or null
-//        return null
-//    }
-
-//    private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
-//        val byteBuffer = ByteBuffer.allocateDirect(BATCH_SIZE * IMAGE_SIZE * IMAGE_SIZE * CHANNELS)
-//        byteBuffer.order(ByteOrder.nativeOrder())
-//
-//        // Scale the input Bitmap to the desired image size
-//        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, IMAGE_SIZE, IMAGE_SIZE, true)
-//
-//        // Convert the scaledBitmap to grayscale and normalize pixel values
-//        val grayscaleBitmap = convertToGrayscale(scaledBitmap)
-//        val normalizedBitmap = normalizeBitmap(grayscaleBitmap)
-//
-//        // Convert the normalizedBitmap to ByteBuffer
-//        val intValues = IntArray(IMAGE_SIZE * IMAGE_SIZE)
-//        normalizedBitmap.getPixels(intValues, 0, IMAGE_SIZE, 0, 0, IMAGE_SIZE, IMAGE_SIZE)
-//
-//        for (pixelValue in intValues) {
-//            val normalizedPixelValue = (pixelValue shr 16 and 0xFF) / 255.0f
-//            byteBuffer.putFloat(normalizedPixelValue)
-//        }
-//
-//        return byteBuffer
-//    }
-//
-//    private fun convertToGrayscale(bitmap: Bitmap): Bitmap {
-//        val grayscaleBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-//        val canvas = Canvas(grayscaleBitmap)
-//        val paint = Paint().apply {
-//            colorMatrix = ColorMatrix().apply {
-//                setSaturation(0f)
-//            }
-//        }
-//        canvas.drawBitmap(bitmap, 0f, 0f, paint)
-//        return grayscaleBitmap
-//    }
-//
-//    private fun normalizeBitmap(bitmap: Bitmap): Bitmap {
-//        val normalizedBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-//        val minPixelValue = 0f
-//        val maxPixelValue = 255f
-//        val delta = maxPixelValue - minPixelValue
-//
-//        for (y in 0 until bitmap.height) {
-//            for (x in 0 until bitmap.width) {
-//                val pixelValue = bitmap.getPixel(x, y)
-//                val normalizedPixelValue = (Color.red(pixelValue) - minPixelValue) / delta
-//                val normalizedColor = Color.rgb(
-//                    (normalizedPixelValue * 255).toInt(),
-//                    (normalizedPixelValue * 255).toInt(),
-//                    (normalizedPixelValue * 255).toInt()
-//                )
-//                normalizedBitmap.setPixel(x, y, normalizedColor)
-//            }
-//        }
-//
-//        return normalizedBitmap
-//    }
-
-
-
-//    private fun mlTryHard(bitmap : Bitmap){
-//        // Step 1: create TFLite's TensorImage object
-//        val image = TensorImage.fromBitmap(bitmap)
-//
-//        // Step 2: Initialize the detector object
-//        val options = ObjectDetector.ObjectDetectorOptions.builder()
-//            .setMaxResults(5)
-//            .setScoreThreshold(0.5f)
-//            .build()
-//        val detector = ObjectDetector.createFromFileAndOptions(
-//            requireContext(), // the application context
-//            "EarDiseaseModel.tflite", // must be same as the filename in assets folder
-//            options
-//        )
-//
-//        // Step 3: feed given image to the model and print the detection result
-//        val results = detector.detect(image)
-//
-//        // Step 4: Parse the detection result and show it
-//        debugPrint(results)
-//    }
-//
-//    private fun debugPrint(results : List<Detection>) {
-//        for ((i, obj) in results.withIndex()) {
-//            val box = obj.boundingBox
-//
-//            Log.d(TAG, "Detected object: ${i} ")
-//            Log.d(TAG, "  boundingBox: (${box.left}, ${box.top}) - (${box.right},${box.bottom})")
-//
-//            for ((j, category) in obj.categories.withIndex()) {
-//                Log.d(TAG, "    Label $j: ${category.label}")
-//                val confidence: Int = category.score.times(100).toInt()
-//                Log.d(TAG, "    Confidence: ${confidence}%")
-//            }
-//        }
-//    }
-
-
-
     private fun beforeActionVisibility(){
         binding.buttonSave.isClickable = false
         binding.buttonSave.isFocusable = false
@@ -465,13 +280,13 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         binding.txtPredict.text = result
     }
 
-    fun stringToBitmap(encodedString: String): Bitmap? {
+    private fun stringToBitmap(encodedString: String): Bitmap? {
         val decodedBytes = Base64.decode(encodedString, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
     }
 
-
     override fun onAttach(context: Context) {
+        Log.d("EDSThesis_DResult", "Currently on Diagnostic Result Fragment...")
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.koreksi_diagnosa))
     }

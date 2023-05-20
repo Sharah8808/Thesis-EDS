@@ -132,7 +132,7 @@
                     app:layout_constraintTop_toBottomOf="@id/text_history_home"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:listitem="@layout/list_history"
+                    tools:listitem="@layout/list_history_homepage"
                     android:background="@drawable/shape_border"
                     />
 

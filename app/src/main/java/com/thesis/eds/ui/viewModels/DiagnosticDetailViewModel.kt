@@ -1,17 +1,12 @@
 package com.thesis.eds.ui.viewModels
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.thesis.eds.data.model.History
 import com.thesis.eds.data.model.HistoryDb
 import com.thesis.eds.data.repository.HistoryRepository
-import com.thesis.eds.utils.Dummy
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,7 +22,7 @@ class DiagnosticDetailViewModel : ViewModel() {
         historyRepository.getHistoriesCollection().whereEqualTo("timeStamp" , timeStamp)
             .addSnapshotListener { value, error ->
             if (error != null) {
-                Log.e(TAG, "Error getting history data", error)
+                Log.e("EDSThesis_DDetailVM", "Error getting history data", error)
                 return@addSnapshotListener
             }
             if (value != null && !value.isEmpty) {
@@ -50,44 +45,17 @@ class DiagnosticDetailViewModel : ViewModel() {
                     val documentId = querySnapshot.documents[0].id
                     historyRepository.updateHistoryData(documentId, mapOf("name" to editedName))
                         .addOnSuccessListener {
-                            Log.d(TAG, "History name updated successfully")
+                            Log.d("EDSThesis_DDetailVM", "History name updated successfully")
                         }
                         .addOnFailureListener { e ->
-                            Log.e(TAG, "Error updating history name", e)
+                            Log.e("EDSThesis_DDetailVM", "Error updating history name", e)
                         }
                 }
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Error querying histories collection", e)
+                Log.e("EDSThesis_DDetailVM", "Error querying histories collection", e)
             }
     }
-
-//    fun downloadPicture(timeStamp: String) {
-//        historyRepository.getHistoriesCollection().whereEqualTo("timeStamp", timeStamp)
-//            .get()
-//            .addOnSuccessListener { querySnapshot ->
-//                if (!querySnapshot.isEmpty) {
-//                    val historyDb = querySnapshot.documents[0].toObject(HistoryDb::class.java)
-//                    historyDb?.let { history ->
-//                        val storageRef = Firebase.storage.reference.child(history.img)
-//                        val localFile = File.createTempFile(history.name, "png")
-//                        storageRef.getFile(localFile)
-//                            .addOnSuccessListener {
-//                                // Image downloaded successfully
-//                                Log.d(TAG, "Image downloaded successfully")
-//                                // TODO: Do something with the downloaded image
-//                            }
-//                            .addOnFailureListener { e ->
-//                                // Error downloading image
-//                                Log.e(TAG, "Error downloading image", e)
-//                            }
-//                    }
-//                }
-//            }
-//            .addOnFailureListener { e ->
-//                Log.e(TAG, "Error querying history document", e)
-//            }
-//    }
 
     fun downloadPicture(timeStamp: String, result : String, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
         val userId = historyRepository.getCurrentUser().uid
@@ -99,12 +67,13 @@ class DiagnosticDetailViewModel : ViewModel() {
                     val historyDb = querySnapshot.documents[0].toObject(HistoryDb::class.java)
                     historyDb?.let { history ->
                         val storageRef = Firebase.storage.reference.child("result images/$userId/$result - $formattedTime.jpg")
-                        Log.d(TAG, "File name wheeeere whaaattt ?? result images/$userId/$result - $formattedTime.jpg ==============================================")
+                        Log.d("EDSThesis_DDetailVM", "Variables check --> Storage ref = result images/$userId/$result - $formattedTime.jpg ----------")
+
                         val localFile = File.createTempFile(history.name, "png")
                         storageRef.getFile(localFile)
                             .addOnSuccessListener {
                                 // Image downloaded successfully
-                                Log.d(TAG, "Image downloaded successfully")
+                                Log.d("EDSThesis_DDetailVM", "Image downloaded successfully")
                                 // Call the onSuccess lambda and pass the filePath
                                 onSuccess(localFile.absolutePath)
                             }
@@ -120,7 +89,6 @@ class DiagnosticDetailViewModel : ViewModel() {
             }
     }
 
-
     fun eraseHistory(timeStamp: String) {
         val historyQuery = historyRepository.getHistoriesCollection()
             .whereEqualTo("timeStamp", timeStamp)
@@ -130,14 +98,14 @@ class DiagnosticDetailViewModel : ViewModel() {
                 val documentId = querySnapshot.documents[0].id
                 historyRepository.deleteHistoryData(documentId)
                     .addOnSuccessListener {
-                        Log.d(TAG, "History data deleted successfully")
+                        Log.d("EDSThesis_DDetailVM", "History data deleted successfully")
                     }
                     .addOnFailureListener { e ->
-                        Log.e(TAG, "Error deleting history data", e)
+                        Log.e("EDSThesis_DDetailVM", "Error deleting history data", e)
                     }
             }
         }.addOnFailureListener { e ->
-            Log.e(TAG, "Error querying histories collection", e)
+            Log.e("EDSThesis_DDetailVM", "Error querying histories collection", e)
         }
     }
 
@@ -146,6 +114,5 @@ class DiagnosticDetailViewModel : ViewModel() {
         val outputFormat = SimpleDateFormat("h:mm", Locale.getDefault())
         val date = inputFormat.parse(timeStamp)
         return date?.let { outputFormat.format(it) }
-
     }
 }

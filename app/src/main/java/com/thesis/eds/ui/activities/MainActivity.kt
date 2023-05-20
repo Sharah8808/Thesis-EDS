@@ -50,13 +50,12 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        Toast.makeText(this, appBarConfiguration.toString() + "eeehhh", Toast.LENGTH_SHORT).show()
 
         navView.setNavigationItemSelectedListener {menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_home -> {
-                    val navController = findNavController(R.id.nav_host_fragment_content_main)
-                    navController.navigate(R.id.nav_home)
+                    val navControllerHome = findNavController(R.id.nav_host_fragment_content_main)
+                    navControllerHome.navigate(R.id.nav_home)
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
@@ -134,7 +133,7 @@ class MainActivity : AppCompatActivity(), ActionBarTitleSetter, MenuItemHighligh
     }
 
     override fun setTitle(title: String?) {
-        supportActionBar?.title = title;
+        supportActionBar?.title = title
     }
 
     override fun setMenuHighlight(idIndex: Int?) {

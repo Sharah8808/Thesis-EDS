@@ -91,6 +91,9 @@
         android:label="fragment_diagnostic_result"
         tools:layout="@layout/fragment_diagnostic_result" >
         <argument
+            android:name="bitmap_args"
+            app:argType="string" />
+        <argument
             android:name="uri_args"
             app:argType="string" />
         <action
@@ -99,6 +102,7 @@
             app:popUpTo="@id/nav_home"
             app:popUpToInclusive="true"
             />
+
 
     </fragment>
 

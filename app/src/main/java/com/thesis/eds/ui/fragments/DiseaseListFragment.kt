@@ -2,11 +2,11 @@ package com.thesis.eds.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.eds.R
@@ -18,13 +18,10 @@ import com.thesis.eds.utils.interfaces.ActionBarTitleSetter
 import com.thesis.eds.utils.interfaces.MenuItemHighlighter
 
 class DiseaseListFragment : Fragment() {
-    private var _binding: FragmentDiseaseListBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private var _binding: FragmentDiseaseListBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel : DiseaseListViewModel
-
     private val listDisease = ArrayList<DiseaseList>()
 
     override fun onCreateView(
@@ -57,7 +54,7 @@ class DiseaseListFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        Toast.makeText(requireActivity(), "is kierooo heerre?", Toast.LENGTH_SHORT).show()
+        Log.d("EDSThesis_DiseaseList", "Currently on Disease List Fragment...")
         super.onAttach(context)
         (activity as ActionBarTitleSetter).setTitle(getString(R.string.menu_daftar))
         (activity as MenuItemHighlighter).setMenuHighlight(3)

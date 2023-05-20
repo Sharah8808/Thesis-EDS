@@ -1,7 +1,5 @@
 package com.thesis.eds.data.model
 
-import com.google.errorprone.annotations.Keep
-
 data class HistoryDb(
     val name: String = "",
     val timeStamp: String = "",

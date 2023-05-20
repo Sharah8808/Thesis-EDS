@@ -139,6 +139,8 @@
         android:text="@string/forgot_password"
         android:textStyle="bold"
         android:textColor="@color/black"
+        android:clickable="true"
+        android:focusable="true"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

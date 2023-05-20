@@ -1,15 +1,12 @@
 package com.thesis.eds.ui.viewModels
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.Query
 import com.thesis.eds.data.model.DiseaseList
-import com.thesis.eds.data.model.History
 import com.thesis.eds.data.model.HistoryDb
 import com.thesis.eds.data.model.User
 import com.thesis.eds.data.repository.HistoryRepository
@@ -49,7 +46,7 @@ class HomeViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener { e ->
-                Log.d(ContentValues.TAG, "Error getting user data: ", e)
+                Log.d("EDSThesis_HomeVM", "Showing home history and disease list recycler view widget....")
             }
     }
 

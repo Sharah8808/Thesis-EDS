@@ -1,6 +1,5 @@
 package com.thesis.eds.data.repository
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -33,13 +32,13 @@ class UserRepository {
             if (documentSnapshot.exists()) {
                 val user = documentSnapshot.toObject(User::class.java)
                 val isPasswordCorrect = user?.password == password
-                Log.e(TAG, "Old Password = ${user?.password} ----------- New password = $password")
+                Log.e("EDSThesis_UserRepo", "Variables check --> Old Password = ${user?.password} | New password = $password ----------")
                 callback(isPasswordCorrect)
             } else {
                 callback(false)
             }
         }.addOnFailureListener { e ->
-            Log.e(TAG, "Error checking password", e)
+            Log.e("EDSThesis_UserRepo", "Error checking password", e)
             callback(false)
         }
     }

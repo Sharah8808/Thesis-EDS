@@ -3,6 +3,7 @@ package com.thesis.eds.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.firebase.auth.FirebaseAuth
@@ -17,8 +18,6 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var firebaseAuth: FirebaseAuth
-//    private lateinit var viewModel: SignUpViewModel
-    private val database = Firebase.firestore
     private val viewModel: SignUpViewModel by viewModels {
         SignUpViewModelFactory(
             FirebaseAuth.getInstance(),
@@ -32,10 +31,6 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         firebaseAuth = FirebaseAuth.getInstance()
-
-//        viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
-    //        viewModel = ViewModelProvider(this, SignUpViewModelFactory(firebaseAuth, database))[SignUpViewModel::class.java]
-
 
         binding.imgBack.setOnClickListener{
             val intent = Intent(this, LoginActivity::class.java)
@@ -54,13 +49,14 @@ class SignUpActivity : AppCompatActivity() {
 
                 viewModel.signupSuccess.observe(this) { success ->
                     if (success) {
-                        Toast.makeText(this, "BALEK KE LOGIN ACTTTT", Toast.LENGTH_SHORT).show()
+                        Log.d("EDSThesis_SignUpAct", "Sign in success. Back to login activity.")
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                     }
                 }
                 viewModel.signupError.observe(this) { error ->
                     // SignUp is failed, show the error message here
+                    Log.d("EDSThesis_SignUpAct", "Sign in failed.")
                     Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
                 }
             } else{
@@ -69,18 +65,4 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-//    private fun createNewAccount(userId: String, name: String,phone: String, email: String, password: String) {
-//        val user = hashMapOf<String, Any?>(
-//            "email" to email,
-//            "name" to name,
-//            "phone" to phone,
-//            "password" to password,
-//            "img" to null
-//        )
-//
-//        database.collection("users").document(userId).set(user)
-//            .addOnSuccessListener { Timber.tag(TAG).d("DocumentSnapshot successfully written!") }
-//            .addOnFailureListener { e -> Timber.tag(TAG).w(e, "Error writing document") }
-//
-//    }
 }
