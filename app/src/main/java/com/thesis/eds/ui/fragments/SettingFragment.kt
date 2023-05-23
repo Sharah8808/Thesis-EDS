@@ -72,6 +72,8 @@ class SettingFragment : Fragment(), View.OnClickListener {
                     .load(R.drawable.chawieputh)
                     .into(binding.imgAvatar)
             }
+            Log.d("EDSThesis_Setting", "Variables check -->\n name = ${user?.fullname}\n email = ${user?.email}\n phone = ${user?.phoneNumber}\n img = ${user?.img}")
+
         }
     }
 

@@ -30,7 +30,7 @@
 
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
-            android:src="@drawable/dislist_xarles"
+            android:src="@drawable/ic_baseline_image_not_supported_24"
             />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:text="Otitis Media"
+            android:text="Diagnostic result"
             android:textStyle="bold"
             android:textSize="24dp"
             android:gravity="fill_vertical"

@@ -31,39 +31,118 @@
         app:layout_constraintTop_toBottomOf="@id/img_result"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="HASIL"
+        android:text="HASIL DIAGNOSA"
         android:textSize="24sp"
-        />
-
-    <TextView
-        android:id="@+id/desc_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/desc_result"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="*hasil diagnosa sementara"
         />
 
     <TextView
         android:id="@+id/txt_predict"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        app:layout_constraintTop_toBottomOf="@id/desc_1"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/desc_result"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="OMed Efusi"
         android:textStyle="bold"
-        android:textSize="36sp"
+        android:textSize="30sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/desc_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_predict"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Keterangan hasil dengan persentasenya :"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/txt_predict_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/desc_1"
+        app:layout_constraintStart_toStartOf="@id/desc_1"
+        android:text="Result 1"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/txt_predict_percentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@id/txt_predict_1"
+        app:layout_constraintStart_toEndOf="@id/txt_predict_1"
+        app:layout_constraintBottom_toBottomOf="@id/txt_predict_1"
+
+        android:text="70%"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/txt_predict_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_predict_1"
+        app:layout_constraintStart_toStartOf="@id/txt_predict_1"
+        android:text="Result 2"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/txt_predict_percentage_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@id/txt_predict_2"
+        app:layout_constraintStart_toEndOf="@id/txt_predict_2"
+        app:layout_constraintBottom_toBottomOf="@id/txt_predict_2"
+        android:text="20%"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/txt_predict_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_predict_2"
+        app:layout_constraintStart_toStartOf="@id/txt_predict_2"
+        android:text="Result 3"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/txt_predict_percentage_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@id/txt_predict_3"
+        app:layout_constraintStart_toEndOf="@id/txt_predict_3"
+        app:layout_constraintBottom_toBottomOf="@id/txt_predict_3"
+        android:text="10%"
+        android:textStyle="bold"
+        android:textSize="16sp"
         />
 
     <TextView
         android:id="@+id/desc_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        app:layout_constraintTop_toBottomOf="@id/txt_predict"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_predict_3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Apakah hasil diagnosanya benar?"

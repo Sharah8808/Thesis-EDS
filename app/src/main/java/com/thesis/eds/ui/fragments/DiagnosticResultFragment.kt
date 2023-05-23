@@ -8,10 +8,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
-import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -43,8 +44,9 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
     private val args : DiagnosticResultFragmentArgs by navArgs()
     private var uri : Uri? = null
     private var finalResult : String? = null
-    private var modelPredictResult : String? = null
     private var unsavedChanges = false
+    private var arrModelResults : ArrayList<String> = ArrayList()
+    private var arrModelPercent : ArrayList<String> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,9 +80,15 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         beforeActionVisibility()
 
         unsavedChanges = true
+        bitmap?.let { mlModelOperationsSecond(it) }
 
-        modelPredictResult = bitmap?.let { mlModelOperationsSecond(it) }
-        binding.txtPredict.text = modelPredictResult
+        binding.txtPredict.text = arrModelResults[0]
+        binding.txtPredict1.text = arrModelResults[0]
+        binding.txtPredict2.text = arrModelResults[1]
+        binding.txtPredict3.text = arrModelResults[2]
+        binding.txtPredictPercentage.text = arrModelPercent[0]
+        binding.txtPredictPercentage2.text = arrModelPercent[1]
+        binding.txtPredictPercentage3.text = arrModelPercent[2]
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -111,9 +119,9 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
             }
             binding.buttonSave.id -> {
                 if(binding.buttonSave.isClickable){
-                    val predictResult = modelPredictResult
+                    val predictResult = arrModelResults[0]
                     Log.d("EDSThesis_DResult", "Variables check --> Predict result = $predictResult | Final result = $finalResult || Uri = $uri ----------")
-                    viewModel.createNewHistory(predictResult!!,finalResult!!,uri!!)
+                    viewModel.createNewHistory(predictResult,finalResult!!,uri!!)
 
                     val action = DiagnosticResultFragmentDirections.actionDiagnosticResultFragmentToNavHome()
                     findNavController().navigate(action)
@@ -178,14 +186,18 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Tulis hasil diagnosa")
 
-        // Set up the input
-        val input = EditText(requireContext())
-        builder.setView(input)
+        // Set up the AutoCompleteTextView
+        val autoCompleteTextView = AutoCompleteTextView(requireContext())
+        val diseaseList = Dummy.getDummyDiseaseList().map { it.name_disease_list }
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, diseaseList)
+        autoCompleteTextView.setAdapter(adapter)
+        builder.setView(autoCompleteTextView)
 
         // Set up the buttons
         builder.setPositiveButton("Simpan") { _, _ ->
-            // Call the callback function with the text from the input field
-            callback(input.text.toString())
+            // Call the callback function with the text from the AutoCompleteTextView
+            val text = autoCompleteTextView.text.toString()
+            callback(text)
         }
         builder.setNegativeButton("Batal") { dialog, _ -> dialog.cancel() }
 
@@ -194,7 +206,13 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-    private fun mlModelOperationsSecond(bitmap: Bitmap): String? {
+
+    private fun toPercentage(n: Float, digits: Int): String {
+        return String.format("%." + digits + "f", n * 100) + "%"
+
+    }
+
+    private fun mlModelOperationsSecond(bitmap: Bitmap) {
         val model = EarDiseaseModel.newInstance(requireContext())
         // Convert the input bitmap to a TensorImage
         val inputTensorImage = bitmapToTensorBuffer(bitmap)
@@ -205,32 +223,58 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
 
         // Get the float array from the output tensor buffer
         val outputArray = outputFeature0.floatArray
-        for (i in outputArray.indices) {
-            Log.d("EDSThesis_DResult", "Model's outputArray[$i] = ${outputArray[i]} --")
-        }
 
-        // Find index of maximum probability
-        var maxIndex = -1
-        var maxConfidence = Float.MIN_VALUE
+        var maxIndexx = -1
+        var secondMaxIndex = -1
+        var thirdMaxIndex = -1
+        var maxConfidencee = Float.MIN_VALUE
+        var secondMaxConfidence = Float.MIN_VALUE
+        var thirdMaxConfidence = Float.MIN_VALUE
+
         for (i in outputArray.indices) {
             val confidence = outputArray[i]
-            Log.d("EDSThesis_DResult", "Model's current outputArray $i = ${outputArray[i]} | Max confidence = $maxConfidence | MaxIndex = $maxIndex---")
-            if (confidence >= maxConfidence) {
-                maxConfidence = confidence
-                maxIndex = i
+
+            if (confidence > maxConfidencee) {
+                thirdMaxIndex = secondMaxIndex
+                thirdMaxConfidence = secondMaxConfidence
+                secondMaxIndex = maxIndexx
+                secondMaxConfidence = maxConfidencee
+                maxIndexx = i
+                maxConfidencee = confidence
+            } else if (confidence > secondMaxConfidence) {
+                thirdMaxIndex = secondMaxIndex
+                thirdMaxConfidence = secondMaxConfidence
+                secondMaxIndex = i
+                secondMaxConfidence = confidence
+            } else if (confidence > thirdMaxConfidence) {
+                thirdMaxIndex = i
+                thirdMaxConfidence = confidence
             }
         }
+
+        Log.d("EDSThesis_DResult", "Max Index         = $maxIndexx, Confidence: $maxConfidencee")
+        Log.d("EDSThesis_DResult", "Second Max Index  = $secondMaxIndex, Confidence: $secondMaxConfidence")
+        Log.d("EDSThesis_DResult", "Third Max Index   = $thirdMaxIndex, Confidence: $thirdMaxConfidence")
 
         // Define list of class labels
         val classLabels = Dummy.getDummyDiseaseList().map { it.name_disease_list }
 
-        // Get predicted class label
-        val predictedClass = classLabels[maxIndex]
+        classLabels[maxIndexx]?.let { arrModelResults.add(it) }
+        classLabels[secondMaxIndex]?.let { arrModelResults.add(it) }
+        classLabels[thirdMaxIndex]?.let { arrModelResults.add(it) }
+        arrModelPercent.add(toPercentage(maxConfidencee, 1))
+        arrModelPercent.add(toPercentage(secondMaxConfidence, 2))
+        arrModelPercent.add(toPercentage(thirdMaxConfidence, 3))
+
+        for(i in arrModelResults){
+            Log.d("EDSThesis_DResult", "Variable check --> model result array = $i")
+        }
+        for(i in arrModelPercent){
+            Log.d("EDSThesis_DResult", "Variable check --> model percentage array = $i")
+        }
 
         // Releases model resources if no longer used.
         model.close()
-
-        return predictedClass
     }
 
     private fun bitmapToTensorBuffer(bitmap: Bitmap): TensorBuffer {
@@ -272,6 +316,13 @@ class DiagnosticResultFragment : Fragment(), View.OnClickListener {
         binding.buttonYes.visibility = View.INVISIBLE
         binding.desc1.visibility = View.INVISIBLE
         binding.desc2.visibility = View.INVISIBLE
+
+        binding.txtPredictPercentage.visibility = View.INVISIBLE
+        binding.txtPredictPercentage2.visibility = View.INVISIBLE
+        binding.txtPredictPercentage3.visibility = View.INVISIBLE
+        binding.txtPredict1.visibility = View.INVISIBLE
+        binding.txtPredict2.visibility = View.INVISIBLE
+        binding.txtPredict3.visibility = View.INVISIBLE
 
         binding.buttonSave.isClickable = true
         binding.buttonSave.isFocusable = true

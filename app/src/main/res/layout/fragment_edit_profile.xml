@@ -27,7 +27,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/chawieputh"
+                android:src="@drawable/ic_baseline_person_24"
                 />
 
             <TextView

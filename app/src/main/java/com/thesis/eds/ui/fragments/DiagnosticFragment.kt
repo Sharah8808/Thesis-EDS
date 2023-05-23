@@ -43,6 +43,7 @@ class DiagnosticFragment : CameraFragment(), CaptureMediaView.OnViewClickListene
 
     private val choosePictureGallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
+            Log.d("EDSThesis_Diagnostic", "Taking picture from gallery...")
             val inputStream = requireContext().contentResolver.openInputStream(uri)
             val fileDescriptor = inputStream?.let { context?.contentResolver?.openFileDescriptor(uri, "r")?.fileDescriptor }
             val bitmapOptions = BitmapFactory.Options().apply {
